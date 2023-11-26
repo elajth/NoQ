@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 
 from ..db_setup import Base
-#from .user import User
+from .user import User
 from .mixins import Timestamp
 
 class Reservation(Timestamp, Base):
@@ -16,4 +16,4 @@ class Reservation(Timestamp, Base):
     end_date_time = Column(DateTime, nullable=False)
     reached_limit = Column(Boolean, nullable=False)
     casemanager_id = Column(Integer, nullable=False)
-    #user_id = Column(Integer, ForeignKey("users.id") , nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id") , nullable=False)

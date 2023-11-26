@@ -1,6 +1,5 @@
 from typing import Optional, List
 import fastapi
-from datetime import datetime
 from pydantic import BaseModel
 
 router = fastapi.APIRouter()

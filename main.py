@@ -3,13 +3,11 @@ from datetime import datetime
 
 from api import hosts, reservations, users
 from db.db_setup import engine
-from db.models import hosts, reservations, users
+from db.models import host, reservation, user
 
-#users.Base.metadata.create_all(bind=engine)
-reservations.Base.metadata.create_all(bind=engine)
-hosts.Base.metadata.create_all(bind=engine)
-
-from api import users, reservations, hosts
+user.Base.metadata.create_all(bind=engine)
+reservation.Base.metadata.create_all(bind=engine)
+host.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="NoQ booking app",
@@ -21,5 +19,5 @@ app = FastAPI(
     },
 )
 app.include_router(users.router)
-#app.include_router(hosts.router)
+app.include_router(hosts.router)
 app.include_router(reservations.router)

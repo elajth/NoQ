@@ -1,3 +1,4 @@
+import os
 from sqlmodel import SQLModel, Session, create_engine
 from datetime import datetime
 from icecream import ic
@@ -6,7 +7,7 @@ from faker import Faker
 from db.models.host import Host
 from db.models.reservation import Reservation
 
-DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost:5432/noq"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
 
 ic(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)

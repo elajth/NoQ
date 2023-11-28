@@ -38,7 +38,7 @@ def add_users():
 
     for i in range(4):
         user = User(
-            name=faker.first_name(),
+            name=faker.name(),
             phone="0709-123123",
             email=faker.email(),
             unokod=""

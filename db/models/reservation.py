@@ -9,6 +9,7 @@ class Reservation(DBModel, table=True):
 
     startDateTime: datetime
     endDateTime: datetime
-    beds: int = Field(default=1, nullable=False, description="Antal bäddar")
     host_id: int
     user_id: int
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)

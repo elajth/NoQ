@@ -7,8 +7,12 @@ from faker import Faker
 from db.models.host import Host
 from db.models.reservation import Reservation
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
+from dotenv import load_dotenv
+# Read settings from .env file
+load_dotenv()
 
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
+ic(os.getcwd())
 ic(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)
 

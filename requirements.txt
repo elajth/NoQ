@@ -1,6 +1,10 @@
 fastapi
 sqlalchemy
+uvicorn
 python-dotenv
 icecream
 pydantic<2.0
 sqlmodel
+httpx
+psycopg2
+faker

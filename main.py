@@ -18,6 +18,11 @@ app = FastAPI(
         "email": "elajth@proton.me",
     },
 )
+
+@app.get("/")
+def health_status():
+    return {"Health status": "noQ API backend status = OK"}
+
 app.include_router(users.router)
 app.include_router(hosts.router)
 app.include_router(reservations.router)

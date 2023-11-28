@@ -1,16 +1,17 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text
-from sqlalchemy.orm import relationship
+from typing import Optional
+from datetime import datetime
+from sqlmodel import SQLModel, Field
+from .common import DBModel
 
-from ..db_setup import Base
-from .mixins import Timestamp
-
-
-class Host(Timestamp, Base):
+class Host(DBModel, table=True):
     __tablename__ = "hosts"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)
-    address1 = Column(String(100), nullable=False)
-    address2 = Column(String(100), nullable=False)
-    count_of_available_places = Column(Integer, nullable=False)
-    total_available_places = Column(Integer, nullable=False)
+    name: str
+    address1: str
+    address2: str
+    count_of_available_places: int
+    total_available_places: int
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    
+    

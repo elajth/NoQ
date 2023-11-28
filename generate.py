@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -10,7 +11,7 @@ from db.models.user import User
 
 Base = declarative_base()
 
-DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost:5432/noq"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
 
 ic(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)

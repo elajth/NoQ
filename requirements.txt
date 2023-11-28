@@ -2,3 +2,5 @@ fastapi
 sqlalchemy
 python-dotenv
 icecream
+pydantic<2.0
+sqlmodel

@@ -26,12 +26,12 @@ def get_users(skip: int = 0, limit: int = 100):
     return user_list
 
 
-@router.post("/users")
-async def create_user(user: UserBase):
-    users.append(user)
-    return "Success"
+# @router.post("/users")
+# async def create_user(user: UserBase):
+#     users.append(user)
+#     return "Success"
 
 
-@router.get("/users/{id}")
-async def get_user(id: int):
-    return {"user": users[id]}
+# @router.get("/users/{id}")
+# async def get_user(id: int):
+#     return {"user": users[id]}

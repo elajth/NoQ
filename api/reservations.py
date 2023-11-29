@@ -16,23 +16,23 @@ async def get_reservations():
         return reservation
 
 
-@router.get("/bookings", response_model=List[Reservation])
-async def get_bookings():
-    with Session(engine) as session:
-        reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
-        return reservation
+# @router.get("/bookings", response_model=List[Reservation])
+# async def get_bookings():
+#     with Session(engine) as session:
+#         reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
+#         return reservation
 
 
-@router.post("/reservation")
-async def create_reservation(reservation: Reservation):
-    # reservations_list.append(reservation)
-    return True
+# @router.post("/reservation")
+# async def create_reservation(reservation: Reservation):
+#     # reservations_list.append(reservation)
+#     return True
 
 
-@router.get("/reservation/{id}")
-async def get_reservation(id: int):
-    # return {"reservation": reservations_list[id]}
-    return True
+# @router.get("/reservation/{id}")
+# async def get_reservation(id: int):
+#     # return {"reservation": reservations_list[id]}
+#     return True
 
 
 def validate_reservation(reservation: Reservation) -> bool:

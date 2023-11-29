@@ -18,15 +18,15 @@ async def get_hosts(skip: int = 0, limit: int = 100):
         return hosts
 
 
-@router.post("/hosts")
-async def create_host(host: Host):
-    # hosts.append(host)
-    return "Success"
+# @router.post("/hosts")
+# async def create_host(host: Host):
+#     # hosts.append(host)
+#     return "Success"
 
 
-@router.get("/hosts/{id}")
-async def get_host(id: int):
-    return {"host": "not implemented"}
+# @router.get("/hosts/{id}")
+# async def get_host(id: int):
+#     return {"host": "not implemented"}
 
 
 @router.get("/generate")

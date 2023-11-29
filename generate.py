@@ -9,6 +9,10 @@ from faker import Faker
 # from core.config import settings
 from db.models.user import User
 
+from dotenv import load_dotenv
+# Read settings from .env file
+load_dotenv()
+
 Base = declarative_base()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
@@ -17,9 +21,8 @@ ic(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)
 
 
-def create_db_tables():
-    # Create the table
-    Base.metadata.create_all(bind=engine)
+# Create the table
+Base.metadata.create_all(bind=engine)
 
 
 # Define a function to get a database session
@@ -35,7 +38,7 @@ def add_users():
 
     for i in range(4):
         user = User(
-            name=faker.first_name(),
+            name=faker.name(),
             phone="0709-123123",
             email=faker.email(),
             unokod=""
@@ -48,5 +51,5 @@ def add_users():
 
 
 if __name__ == "__main__":
-    create_db_tables()
+    
     add_users()

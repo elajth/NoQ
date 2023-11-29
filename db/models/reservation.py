@@ -6,9 +6,6 @@ from .common import DBModel
 from db.db_setup import get_session
 from icecream import ic
 
-# from api.reservations import validate_reservation
-# from api.reservations import validate_reservation
-
 class Reservation(DBModel, table=True):
     __tablename__ = "reservation"
 

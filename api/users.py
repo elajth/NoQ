@@ -19,7 +19,7 @@ class UserBase(BaseModel):
 router = APIRouter()
 
 
-@router.get("/users")
+@router.get("/user")
 def get_users(skip: int = 0, limit: int = 100):
     with Session(engine) as session:
         user_list = session.query(User).offset(skip).limit(limit).all()

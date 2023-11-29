@@ -11,7 +11,7 @@ from generate import add_users
 router = APIRouter()
 
 
-@router.get("/hosts", response_model=List[Host])
+@router.get("/host", response_model=List[Host])
 async def get_hosts(skip: int = 0, limit: int = 100):
     with Session(engine) as session:
         hosts = session.exec(select(Host)).all()

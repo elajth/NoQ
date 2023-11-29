@@ -24,6 +24,8 @@ engine = create_engine(DATABASE_URL, echo=False)
 
 
 # Create the table
+# def create_db_tables():
+
 Base.metadata.create_all(bind=engine)
 
 
@@ -34,7 +36,8 @@ def get_session():
     return session
 
 
-def add_users():
+def add_users() -> int:
+    # create_db_tables()
     faker = Faker("sv_SE")
     session = get_session()
 
@@ -52,7 +55,9 @@ def add_users():
         ic(user.id, user.name, "added")
 
     session.close()
+    return i
 
 
 if __name__ == "__main__":
+    create_db_tables()
     add_users()

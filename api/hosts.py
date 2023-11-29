@@ -5,10 +5,11 @@ from sqlmodel import select, Session
 from db.db_setup import get_db, engine
 from db.models.host import Host
 
-from generate_sqlmodel import add_hosts, add_reservation
+from generate_sqlmodel import create_db_tables, add_hosts, add_reservation
 from generate import add_users
 
 router = APIRouter()
+
 
 @router.get("/hosts", response_model=List[Host])
 async def get_hosts(skip: int = 0, limit: int = 100):
@@ -30,12 +31,10 @@ async def get_host(id: int):
 
 @router.get("/generate")
 async def do_generate():
-    
-    add_hosts
-    log = "hosts data generated. "
+    create_db_tables(True)
+    log = str(add_hosts()) + " hosts generated. "
     add_reservation
-    log += "reservation data generated. "
-    
-    add_users
-    log += "users data generated. "
+    log += str(add_reservation()) + " reservations generated. "
+
+    log += str(add_users()) + " users  generated. "
     return log

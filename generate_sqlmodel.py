@@ -34,7 +34,7 @@ def get_session():
         return session
 
 
-def add_hosts():
+def add_hosts() -> int:
     faker = Faker("sv_SE")
     session = get_session()
 
@@ -55,9 +55,10 @@ def add_hosts():
             ic(host.id, host.name, "added")
 
     session.close()
+    return i
 
 
-def add_reservation():
+def add_reservation() -> int:
     faker = Faker("sv_SE")
     session = get_session()
 
@@ -80,6 +81,7 @@ def add_reservation():
             ic(reservation.user_id, reservation.start_date, state)
 
     session.close()
+    return i
 
 
 if __name__ == "__main__":

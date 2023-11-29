@@ -33,11 +33,14 @@ async def get_hosts(skip: int = 0, limit: int = 100):
 async def do_generate():
     try:
         create_db_tables(True)
+
         log = str(add_hosts()) + " hosts generated. "
+
         add_reservation
         log += str(add_reservation()) + " reservations generated. "
 
         log += str(add_users()) + " users  generated. "
         return log
+
     except:
-        return "Inget tillagt vid genereringen."
+        return "Testdata finns redan."

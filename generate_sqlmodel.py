@@ -1,20 +1,25 @@
 import os
+import random
 from sqlmodel import SQLModel, Session, create_engine
-from datetime import datetime
+from datetime import datetime, timedelta
 from icecream import ic
 from faker import Faker
 
+from api.reservations import validate_reservation
+
 from db.models.host import Host
 from db.models.reservation import Reservation
+from db.models.common import debug_connection
 
 from dotenv import load_dotenv
+
 # Read settings from .env file
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
-ic(os.getcwd())
-ic(DATABASE_URL)
-engine = create_engine(DATABASE_URL, echo=True)
+debug_connection(DATABASE_URL)
+
+engine = create_engine(DATABASE_URL, echo=False)
 
 
 def create_db_tables(drop_all: bool = False):
@@ -33,13 +38,16 @@ def add_hosts():
     faker = Faker("sv_SE")
     session = get_session()
 
-    for i in range(2):
+    härbärge = ["Korskyrkan", "Grimmans Akutboende", "Bostället", "Stadsmissionen"]
+
+    for i in range(4):
         host = Host(
-            name=faker.company(),
+            id=i,
+            name=härbärge[i],
             address1=faker.street_address(),
             address2=faker.postcode() + " " + faker.city(),
-            count_of_available_places=20,
-            total_available_places=25,
+            count_of_available_places=12 + i * 3,
+            total_available_places=15 + i * 4,
         )
         with Session(engine) as session:
             session.add(host)
@@ -53,18 +61,23 @@ def add_reservation():
     faker = Faker("sv_SE")
     session = get_session()
 
-    for i in range(2):
+    for i in range(9):
         reservation = Reservation(
             id=i,
-            startDateTime=datetime.now(),
-            endDateTime=datetime.now(),
-            host_id=1 + i,
-            user_id=2 + i,
+            start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
+            end_date=datetime.now(),
+            host_id=random.randint(0, 3),
+            user_id=random.randint(1, 10),
         )
         with Session(engine) as session:
-            session.add(reservation)
-            session.commit()
-            ic(reservation.id, "added")
+            if validate_reservation(reservation):
+                session.add(reservation)
+                session.commit()
+                state = "Reservation added"
+            else:
+                state = "Not valid - User already has a reservation this date"
+
+            ic(reservation.user_id, reservation.start_date, state)
 
     session.close()
 

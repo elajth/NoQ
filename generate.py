@@ -17,7 +17,7 @@ load_dotenv()
 
 Base = declarative_base()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 
 ic(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=False)

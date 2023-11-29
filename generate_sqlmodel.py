@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # Read settings from .env file
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 debug_connection(DATABASE_URL)
 
 engine = create_engine(DATABASE_URL, echo=False)

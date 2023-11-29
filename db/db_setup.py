@@ -8,9 +8,7 @@ from dotenv import load_dotenv
 # Read settings from .env file
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2:///noq")
-
-ic(DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 engine = create_engine(
     DATABASE_URL, connect_args={}, future=True
 )
@@ -29,3 +27,8 @@ def get_db():
     finally:
         db.close()
 
+
+def get_session():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session

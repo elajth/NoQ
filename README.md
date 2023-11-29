@@ -3,7 +3,7 @@
 Våra tankar i team noQ går till Er och vi kämpar för att ni ska slippa stå i kö varje dag för en eventuell sovplats.
 
 ## .env file for settings
-DATABASE_URL=sqlite:///database.sqlite
+DATABASE_URL=sqlite:///noq.sqlite
 
 ## create database tables
 ```

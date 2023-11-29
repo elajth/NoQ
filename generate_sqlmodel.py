@@ -9,17 +9,9 @@ from api.reservations import validate_reservation
 
 from db.models.host import Host
 from db.models.reservation import Reservation
-from db.models.common import debug_connection
+from db.models.common import get_database_url
 
-from dotenv import load_dotenv
-
-# Read settings from .env file
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
-debug_connection(DATABASE_URL)
-
-engine = create_engine(DATABASE_URL, echo=False)
+engine = create_engine(get_database_url(), echo=False)
 
 
 def create_db_tables(drop_all: bool = False):
@@ -67,6 +59,7 @@ def add_reservation() -> int:
             id=i,
             start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
             end_date=datetime.now(),
+            extra_info="Ove checkar",
             host_id=random.randint(0, 3),
             user_id=random.randint(1, 10),
         )

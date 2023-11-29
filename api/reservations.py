@@ -4,14 +4,22 @@ from sqlalchemy import func, and_
 from sqlmodel import select, Session
 from db.db_setup import get_db, get_session, engine
 from db.models.reservation import Reservation
+from db.models.host import Host
 
 router = APIRouter()
 
 
-@router.get("/reservation", response_model=List[Reservation])
+@router.get("/reservations", response_model=List[Reservation])
 async def get_reservations():
     with Session(engine) as session:
         reservation = session.exec(select(Reservation)).all()
+        return reservation
+
+
+@router.get("/bookings", response_model=List[Reservation])
+async def get_bookings():
+    with Session(engine) as session:
+        reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
         return reservation
 
 

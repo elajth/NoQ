@@ -15,6 +15,3 @@ class Reservation(DBModel, table=True):
     user_id: int = Field(index=True, nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-
-    # def validate(self):
-    #     return validate_reservation(self)

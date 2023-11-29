@@ -1,10 +1,21 @@
+import os
 from typing import Optional
 from sqlmodel import Field, SQLModel
 from icecream import ic
+from dotenv import load_dotenv
 
 
 class DBModel(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
+
+
+def get_database_url():
+    # Read settings from .env file
+    load_dotenv()
+
+    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
+    debug_connection(DATABASE_URL)
+    return DATABASE_URL
 
 
 def debug_connection(db_url: str):
@@ -19,3 +30,13 @@ def debug_connection(db_url: str):
         print("")  # formatting output
     except IndexError:
         print(db_url)
+
+
+def print_code(filename: str, from_line: int, to_line: int):
+    if os.path.isfile(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = file.read().split("\n")
+            for i in range(from_line - 1, to_line):
+                print(data[i])
+
+

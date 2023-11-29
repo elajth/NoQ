@@ -3,6 +3,7 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_users():
     response = client.get("/users")
     assert response.status_code == 200
@@ -18,7 +19,7 @@ def test_hosts():
 
 
 def test_reservations():
-    response = client.get("/reservation")
+    response = client.get("/reservations")
     assert response.status_code == 200
     json_data = dict(response.json()[0])
     assert int(json_data["user_id"]) > 0

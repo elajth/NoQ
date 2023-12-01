@@ -4,6 +4,7 @@ from sqlalchemy import func, and_
 from sqlmodel import select, Session
 from db.db_setup import get_db, get_session, engine
 from db.models.reservation import Reservation
+from db.models.host import Host
 
 router = APIRouter()
 
@@ -15,16 +16,23 @@ async def get_reservations():
         return reservation
 
 
-@router.post("/reservation")
-async def create_reservation(reservation: Reservation):
-    # reservations_list.append(reservation)
-    return True
+# @router.get("/bookings", response_model=List[Reservation])
+# async def get_bookings():
+#     with Session(engine) as session:
+#         reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
+#         return reservation
 
 
-@router.get("/reservation/{id}")
-async def get_reservation(id: int):
-    # return {"reservation": reservations_list[id]}
-    return True
+# @router.post("/reservation")
+# async def create_reservation(reservation: Reservation):
+#     # reservations_list.append(reservation)
+#     return True
+
+
+# @router.get("/reservation/{id}")
+# async def get_reservation(id: int):
+#     # return {"reservation": reservations_list[id]}
+#     return True
 
 
 def validate_reservation(reservation: Reservation) -> bool:

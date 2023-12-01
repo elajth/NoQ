@@ -19,19 +19,19 @@ class UserBase(BaseModel):
 router = APIRouter()
 
 
-@router.get("/users")
+@router.get("/user")
 def get_users(skip: int = 0, limit: int = 100):
     with Session(engine) as session:
         user_list = session.query(User).offset(skip).limit(limit).all()
     return user_list
 
 
-@router.post("/users")
-async def create_user(user: UserBase):
-    users.append(user)
-    return "Success"
+# @router.post("/users")
+# async def create_user(user: UserBase):
+#     users.append(user)
+#     return "Success"
 
 
-@router.get("/users/{id}")
-async def get_user(id: int):
-    return {"user": users[id]}
+# @router.get("/users/{id}")
+# async def get_user(id: int):
+#     return {"user": users[id]}

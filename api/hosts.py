@@ -5,8 +5,8 @@ from sqlmodel import select, Session
 from db.db_setup import get_db, engine
 from db.models.host import Host
 
-from generate_sqlmodel import create_db_tables, add_hosts, add_reservation
-from generate import add_users
+from generate_sqlmodel import create_db_tables, add_hosts, add_reservation, add_users
+#from generate import add_users
 
 router = APIRouter()
 
@@ -39,7 +39,7 @@ async def do_generate():
         add_reservation
         log += str(add_reservation()) + " reservations generated. "
 
-        log += str(add_users()) + " users  generated. "
+        log += str(add_users()) + " users generated. "
         return log
 
     except:

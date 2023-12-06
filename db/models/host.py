@@ -13,5 +13,3 @@ class Host(DBModel, table=True):
     total_available_places: int
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    
-    

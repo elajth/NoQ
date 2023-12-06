@@ -1,9 +1,9 @@
 from typing import Optional
 from datetime import datetime, date
 from sqlmodel import SQLModel, Field, select
-from sqlalchemy import and_, func
+# from sqlalchemy import and_, func
 from .common import DBModel
-from db.db_setup import get_session
+# from db.db_setup import get_session
 from icecream import ic
 
 class Reservation(DBModel, table=True):

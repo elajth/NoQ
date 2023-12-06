@@ -9,6 +9,7 @@ from api.reservations import validate_reservation
 
 from db.models.host import Host
 from db.models.reservation import Reservation
+from db.models.user import User
 from db.models.common import get_database_url
 
 engine = create_engine(get_database_url(), echo=False)
@@ -76,8 +77,31 @@ def add_reservation() -> int:
     session.close()
     return i
 
+def add_users() -> int:
+    faker = Faker("sv_SE")
+    session = get_session()
+
+    for i in range(25):
+        namn = faker.name()
+        user = User(
+            id=i,
+            name=namn,
+            phone="070" + f"{random.randint(0,9)}-{random.randint(121212,909090)}",
+            email=namn.lower().replace(" ", ".") + "@hotmejl.se",
+            unokod="",
+        )
+        with Session(engine) as session:
+            session.add(user)
+            session.commit()
+            ic(user.id, user.name, "added")
+
+    session.close()
+    return i
+
 
 if __name__ == "__main__":
     create_db_tables(drop_all=True)
+    add_users()
     add_hosts()
     add_reservation()
+    

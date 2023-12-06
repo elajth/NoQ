@@ -14,6 +14,15 @@ async def get_users(skip: int = 0, limit: int = 100):
         users = session.exec(select(User)).all()
         return users
 
+
+@router.post("/create_new_user",)
+async def create_new_user(user: User):
+    with Session(engine) as session:
+        session.add(user)
+        session.commit()
+    return user
+
+
 #@router.get("/user")
 #def get_users(skip: int = 0, limit: int = 100):
 #    with Session(engine) as session:

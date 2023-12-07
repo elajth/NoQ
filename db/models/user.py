@@ -1,13 +1,30 @@
+from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Field
-from .common import DBModel
+from .common import DBCommon
 
-class User(DBModel, table=True):
-    __tablename__ = "users"
 
+class UserBase(SQLModel):
     name: str
     phone: str
     email: str
     unokod: str
-    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
+class User(UserBase, DBCommon, table=True):
+    __tablename__ = "users"
+
+
+class UserCreate(UserBase):
+    pass
+
+
+class UserRead(UserBase):
+    id: int
+
+
+class UserPatch(SQLModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    unokod: Optional[str] = None

@@ -33,6 +33,8 @@ def add_hosts() -> int:
 
     härbärge = ["Korskyrkan", "Grimmans Akutboende", "Bostället", "Stadsmissionen"]
 
+    ic("---- HOSTS ----")
+
     for i in range(4):
         host = Host(
             id=i,
@@ -70,7 +72,7 @@ def add_reservation() -> int:
                 session.commit()
                 state = "Reservation added"
             else:
-                state = "Not valid reservation - User already has a reservation this date"
+                state = "User already has a reservation this date"
 
             ic(reservation.user_id, reservation.start_date, state)
 

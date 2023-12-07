@@ -161,7 +161,12 @@ def select_joined_tables():
     with Session(engine) as session:
         print_code(__file__, 163, 4)
         # Alt 1 - Full JOIN btw all objects without filter
-        statement = select(Team, HorseType, Horse).join(HorseType).join(Team).order_by(Team.headquarters)
+        statement = (
+            select(Team, HorseType, Horse)
+            .join(HorseType)
+            .join(Team)
+            .order_by(Team.headquarters)
+        )
         result = session.exec(statement)
         ic(result.all())
 

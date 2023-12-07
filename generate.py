@@ -33,7 +33,7 @@ def add_hosts() -> int:
 
     härbärge = ["Korskyrkan", "Grimmans Akutboende", "Bostället", "Stadsmissionen"]
 
-    ic("---- HOSTS ----")
+    print("\n---- HOSTS ----")
 
     for i in range(4):
         host = Host(
@@ -57,7 +57,7 @@ def add_reservation() -> int:
     faker = Faker("sv_SE")
     session = get_session()
 
-    for i in range(9):
+    for i in range(15):
         reservation = Reservation(
             id=i,
             start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
@@ -79,9 +79,12 @@ def add_reservation() -> int:
     session.close()
     return i
 
+
 def add_users() -> int:
     faker = Faker("sv_SE")
     session = get_session()
+
+    print("\n---- USERS ----")
 
     for i in range(25):
         namn = faker.name()
@@ -103,7 +106,6 @@ def add_users() -> int:
 
 if __name__ == "__main__":
     create_db_tables(drop_all=True)
-    add_users()
     add_hosts()
+    add_users()
     add_reservation()
-    

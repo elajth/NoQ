@@ -9,7 +9,7 @@ from db.models.host import Host
 router = APIRouter()
 
 
-@router.get("/reservation", response_model=List[Reservation])
+@router.get("/reservations", response_model=List[Reservation])
 async def get_reservations():
     with Session(engine) as session:
         reservation = session.exec(select(Reservation)).all()

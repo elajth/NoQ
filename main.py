@@ -5,10 +5,6 @@ from api import hosts, reservations, users
 from db.db_setup import engine
 from db.models import host, reservation, user
 
-user.Base.metadata.create_all(bind=engine)
-# reservation.Base.metadata.create_all(bind=engine)
-# host.Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title="NoQ booking app",
     description="App for users to search beds and create reservations",

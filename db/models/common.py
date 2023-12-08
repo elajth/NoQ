@@ -1,12 +1,22 @@
 import os
 from typing import Optional
+from datetime import datetime
 from sqlmodel import Field, SQLModel
+from sqlalchemy import DateTime, func, Column
 from icecream import ic
 from dotenv import load_dotenv
 
 
-class DBModel(SQLModel):
+class DBCommon(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
+
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+    updated_at: Optional[datetime] = Field(
+        sa_column=Column(
+            DateTime(timezone=True), onupdate=func.now(), default=None, nullable=True
+        )  # sa betyder SQLAlchemy
+    )
 
 
 def get_database_url():
@@ -28,6 +38,7 @@ def debug_connection(db_url: str):
         database = url[1].split("?")[0]
         ic(cloud_db, user, database)
         print("")  # formatting output
+
     except IndexError:
         print(db_url)
 
@@ -38,5 +49,3 @@ def print_code(filename: str, from_line: int, to_line: int):
             data = file.read().split("\n")
             for i in range(from_line - 1, to_line):
                 print(data[i])
-
-

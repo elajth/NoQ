@@ -1,16 +1,30 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Text
-from sqlalchemy.orm import relationship
+from typing import Optional
+from datetime import datetime
+from sqlmodel import SQLModel, Field
+from .common import DBCommon
 
-from ..db_setup import Base
-from .mixins import Timestamp
+
+class UserBase(SQLModel):
+    name: str
+    phone: str
+    email: str
+    unokod: str
 
 
-class User(Timestamp, Base):
+class User(UserBase, DBCommon, table=True):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)
-    phone = Column(String(100), nullable=False)
-    email = Column(String(100), nullable=False)
-    unokod = Column(String(100), nullable=False)
-    # reservation_uuid = Column(Integer, ForeignKey("reservations.id"), nullable=False)
+
+class UserCreate(UserBase):
+    pass
+
+
+class UserRead(UserBase):
+    id: int
+
+
+class UserPatch(SQLModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    unokod: Optional[str] = None

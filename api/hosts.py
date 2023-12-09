@@ -28,20 +28,3 @@ async def get_hosts(skip: int = 0, limit: int = 100):
 # @router.get("/hosts/{id}")
 # async def get_host(id: int):
 #     return {"host": "not implemented"}
-
-
-@router.get("/generate")
-async def do_generate():
-    try:
-        create_db_tables(True)
-
-        log = str(add_hosts()) + " hosts generated. "
-
-        add_reservation
-        log += str(add_reservation()) + " reservations generated. "
-
-        log += str(add_users()) + " users generated. "
-        return log
-
-    except:
-        return "Testdata finns redan."

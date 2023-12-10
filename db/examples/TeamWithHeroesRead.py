@@ -17,19 +17,19 @@ from sqlmodel import (
 )
 
 
-# class DBCommon(SQLModel):
-#     id: Optional[int] = Field(default=None, primary_key=True)
+class DBCommon(SQLModel):
+    id: Optional[int] = Field(default=None, primary_key=True)
 
-#     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
-#     updated_at: Optional[datetime] = Field(
-#         sa_column=Column(
-#             DateTime(timezone=True), onupdate=func.now(), default=None, nullable=True
-#         )  # sa betyder SQLAlchemy
-#     )
+    updated_at: Optional[datetime] = Field(
+        sa_column=Column(
+            DateTime(timezone=True), onupdate=func.now(), default=None, nullable=True
+        )  # sa betyder SQLAlchemy
+    )
 
 
-class TeamFields(SQLModel):
+class TeamBase(SQLModel):
     """
     Primary fields
     """
@@ -40,19 +40,19 @@ class TeamFields(SQLModel):
 
 # TeamDB is named Team in SQLModel example,
 # but since it is never used I've renamed it
-class TeamDB(TeamFields, table=True):
+class TeamDB(TeamBase, DBCommon, table=True):
     """
     DB Access
     """
 
     __tablename__ = "team"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    # id: Optional[int] = Field(default=None, primary_key=True)
 
     heroes: List["Hero"] = Relationship(back_populates="team")
 
 
-class TeamAdd(TeamFields):
+class TeamAdd(TeamBase):
     """
     Add team
     """
@@ -62,7 +62,7 @@ class TeamAdd(TeamFields):
 
 # Team is named TeamRead in SQLModel example,
 # but since Team is more descriptive and available I've renamed it
-class Team(TeamFields):
+class Team(TeamBase):
     """
     Team who owns and trains heros
     """
@@ -160,20 +160,24 @@ def create_db_and_tables():
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
     team_solvalla = TeamDB(name="Stig H Johansson", headquarters="Solvalla")
-    hero_cannon = Hero(name="Cannon")
-    hero_dakota = Hero(name="Dakota")
+    team_axevalla = TeamDB(name="André Eklundh", headquarters="Axevalla")
+    hero_cannon = Hero(name="CANNON BALL")
+    hero_dakota = Hero(name="DAKOTA")
+    hero_forth_vox = Hero(name="FOURTH VOX")
 
     with Session(engine) as session:
         # Add Team
         session.add(team_solvalla)
+        session.add(team_axevalla)
         session.commit()
-        session.refresh(team_solvalla)
+        # session.refresh(team_solvalla)
         # Add Hero
         hero_cannon.team = team_solvalla
         hero_dakota.team = team_solvalla
-        session.add(hero_cannon)
-        session.add(hero_dakota)
+        hero_forth_vox.team = team_axevalla
         session.commit()
+
+
 
 
 def get_session():

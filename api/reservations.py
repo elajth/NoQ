@@ -2,11 +2,12 @@ from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import func, and_
 from sqlmodel import select, Session
-from db.db_setup import get_db, get_session, engine
+from db.db_setup import get_db, get_session, engine, sqlmodel_session
 from db.models.reservation import (
     ReservationDB,
     Reservation,
     Reservation_User,
+    Reservation_User_Host,
     ReservationAdd,
 )
 from db.models.host import HostDB
@@ -15,11 +16,12 @@ from icecream import ic
 router = APIRouter()
 
 
-@router.get("/reservations", response_model=List[Reservation])
-async def get_reservations():
-    with Session(engine) as session:
-        reservation = session.exec(select(ReservationDB)).all()
-        return reservation
+@router.get("/reservations", response_model=List[Reservation_User])
+async def get_reservations(
+    *, session: Session = Depends(sqlmodel_session)
+):
+    reservation = session.exec(select(ReservationDB)).all()
+    return reservation
 
 
 # @router.get("/reservations", response_model=List[Reservation])
@@ -37,15 +39,15 @@ async def get_reservations():
 
 @router.post("/reservations", response_model=ReservationDB)
 async def add_reservation(
-    *, session: Session = Depends(get_session), reservation: ReservationAdd
+    *, session: Session = Depends(get_db), reservation: ReservationAdd
 ):
     # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
     rsrv: ReservationDB = ReservationDB.from_orm(reservation)
-    ic(rsrv)
-    ic(reservation)
     if not valid_reservation(rsrv):
         raise HTTPException(
-            status_code=404, detail="Dubbelbokning samma dag för denna brukare"
+            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            detail="Dubbelbokning samma dag för denna brukare",
+            headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
         )
     else:
         with Session(engine) as session:
@@ -53,7 +55,7 @@ async def add_reservation(
             session.commit()
             session.refresh(rsrv)
             ic("ADDED")
-    return reservation
+    return rsrv
 
 
 @router.get("/reservations/{id}", response_model=Reservation_User)
@@ -73,18 +75,10 @@ def valid_reservation(reservation: ReservationDB) -> bool:
             .where(ReservationDB.start_date == startdate)
             .where(ReservationDB.user_id == reservation.user_id)
         )
-        matching_reservation: Reservation = db.execute(statement).first()
-        # matching_reservation = (
-        #     db.query(ReservationDB)
-        #     .filter(
-        #         and_(
-        #             startdate == func.date(reservation.start_date),
-        #             ReservationDB.user_id == reservation.user_id,
-        #         )
-        #     )
-        #     .first()
-        # )
+        existing_reservation: Reservation = db.execute(statement).first()
 
-    ic(matching_reservation)
+    if existing_reservation is not None:
+        ic(existing_reservation)
+        return False
 
-    return matching_reservation is None
+    return True

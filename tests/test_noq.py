@@ -40,6 +40,7 @@ def test_hosts():
 
 
 def test_add_reservation():
+    # Add a new User to make sure it is possible to add reservation
     person = {
         "name": "Victor Testsson",
         "phone": "0708504033",
@@ -49,12 +50,15 @@ def test_add_reservation():
     response = client.post("/users", json=person)
     assert response.status_code == 200
     added_user_id = response.json()["id"]
+
+    # Add reservation for new user
     data = {"start_date": "2024-01-01", "user_id": added_user_id, "host_id": 1}
     response = client.post("/reservations", json=data)
     assert response.status_code == 200
-    # Testa igen med samma data
+
+    # Samma data ska ge FEL och returkod 400
     response = client.post("/reservations", json=data)
-    assert response.status_code > 400
+    assert response.status_code == 400
 
 
 def test_reservations():

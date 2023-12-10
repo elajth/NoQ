@@ -1,15 +1,21 @@
 from typing import Optional, List
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import func, and_
 from sqlmodel import select, Session
 from db.db_setup import get_db, get_session, engine
-from db.models.reservation import ReservationDB
+from db.models.reservation import (
+    ReservationDB,
+    Reservation,
+    Reservation_User,
+    ReservationAdd,
+)
 from db.models.host import HostDB
+from icecream import ic
 
 router = APIRouter()
 
 
-@router.get("/reservations", response_model=List[ReservationDB])
+@router.get("/reservations", response_model=List[Reservation])
 async def get_reservations():
     with Session(engine) as session:
         reservation = session.exec(select(ReservationDB)).all()
@@ -29,13 +35,32 @@ async def get_reservations():
 #     return True
 
 
-# @router.get("/reservation/{id}")
-# async def get_reservation(id: int):
-#     # return {"reservation": reservations_list[id]}
-#     return True
+@router.post("/reservations", response_model=ReservationAdd)
+async def add_reservation(reservation: ReservationAdd):
+    _reservation: ReservationDB = ReservationDB.from_orm(reservation)
+    ic(_reservation)
+    if not valid_reservation(_reservation):
+        raise HTTPException(
+            status_code=404, detail="Dubbelbokning samma dag för denna brukare"
+        )
+
+    with Session(engine) as session:
+        session.add(_reservation)
+        session.commit()
+        session.refresh(_reservation)
+    return _reservation
 
 
-def validate_reservation(reservation: ReservationDB) -> bool:
+@router.get("/reservations/{id}", response_model=Reservation_User)
+async def get_reservation(*, id: int, session: Session = Depends(get_db)):
+    reservation = session.get(ReservationDB, id)
+
+    if not reservation:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    return reservation
+
+
+def valid_reservation(reservation: ReservationDB) -> bool:
     startdate = func.date(reservation.start_date)
     with get_session() as db:
         db_reservation = (
@@ -49,7 +74,7 @@ def validate_reservation(reservation: ReservationDB) -> bool:
             .first()
         )
 
-    print(f"\nReservation.validate({reservation.start_date}, {reservation.user_id}):")
+    ic(reservation)
 
     # ic(reservation)
 

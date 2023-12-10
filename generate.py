@@ -18,7 +18,9 @@ engine = create_engine(get_database_url(), echo=False)
 def create_db_tables(drop_all: bool = False):
     if drop_all:
         SQLModel.metadata.drop_all(engine)
+        ic("Drop all tables")
     # Create the table
+    ic("Create DB tables")
     SQLModel.metadata.create_all(engine)
 
 

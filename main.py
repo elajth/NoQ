@@ -4,6 +4,7 @@ from datetime import datetime
 from api import hosts, reservations, users, common_services
 from db.db_setup import engine
 from db.models import host, reservation, user
+# from db.models.host import Host
 
 app = FastAPI(
     title="NoQ booking app",

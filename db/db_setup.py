@@ -8,9 +8,10 @@ from dotenv import load_dotenv
 # Read settings from .env file
 load_dotenv()
 
+connect_args = {"check_same_thread": False}
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 engine = create_engine(
-    DATABASE_URL, connect_args={}, future=True
+    DATABASE_URL, connect_args=connect_args, future=True
 )
 
 SessionLocal = sessionmaker(

@@ -1,7 +1,10 @@
 from typing import Optional
 from datetime import datetime
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Relationship
 from .common import DBCommon
+from git import TYPE_CHECKING
+
+from .reservation import ReservationDB
 
 
 class UserBase(SQLModel):
@@ -13,6 +16,8 @@ class UserBase(SQLModel):
 
 class User(UserBase, DBCommon, table=True):
     __tablename__ = "users"
+
+    reserved: Optional[ReservationDB] = Relationship(back_populates="user")
 
 
 class UserCreate(UserBase):

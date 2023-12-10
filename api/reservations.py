@@ -3,16 +3,16 @@ from fastapi import APIRouter
 from sqlalchemy import func, and_
 from sqlmodel import select, Session
 from db.db_setup import get_db, get_session, engine
-from db.models.reservation import Reservation
+from db.models.reservation import ReservationDB
 from db.models.host import HostDB
 
 router = APIRouter()
 
 
-@router.get("/reservations", response_model=List[Reservation])
+@router.get("/reservations", response_model=List[ReservationDB])
 async def get_reservations():
     with Session(engine) as session:
-        reservation = session.exec(select(Reservation)).all()
+        reservation = session.exec(select(ReservationDB)).all()
         return reservation
 
 
@@ -35,15 +35,15 @@ async def get_reservations():
 #     return True
 
 
-def validate_reservation(reservation: Reservation) -> bool:
+def validate_reservation(reservation: ReservationDB) -> bool:
     startdate = func.date(reservation.start_date)
     with get_session() as db:
         db_reservation = (
-            db.query(Reservation)
+            db.query(ReservationDB)
             .filter(
                 and_(
                     startdate == func.date(reservation.start_date),
-                    Reservation.user_id == reservation.user_id,
+                    ReservationDB.user_id == reservation.user_id,
                 )
             )
             .first()

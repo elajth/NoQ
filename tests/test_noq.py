@@ -36,6 +36,13 @@ def test_reservations():
     assert int(json_data["user_id"]) > 0
 
 
+def test_host_with_reservations():
+    response = client.get("/hosts/1")
+    assert response.status_code == 200
+    json_data = dict(response.json())["reservations"]
+    assert len(json_data) > 0
+
+
 def test_generate():
     response = client.get("/generate")
     assert response.status_code == 200

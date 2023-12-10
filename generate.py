@@ -8,7 +8,7 @@ from faker import Faker
 from api.reservations import validate_reservation
 
 from db.models.host import HostDB
-from db.models.reservation import Reservation
+from db.models.reservation import ReservationDB
 from db.models.user import User
 from db.models.common import get_database_url
 
@@ -60,7 +60,7 @@ def add_reservation() -> int:
     session = get_session()
 
     for i in range(15):
-        reservation = Reservation(
+        reservation = ReservationDB(
             id=i,
             start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
             end_date=datetime.now(),

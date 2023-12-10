@@ -8,7 +8,7 @@ from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, sele
 project_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root_dir)
 
-from db.models.host import Host
+from db.models.host import HostDB
 from db.models.reservation import Reservation
 
 
@@ -24,21 +24,21 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 def get_host_reservations(id: int):
     with Session(engine) as session:
-        statement = select(Host, Reservation).join(Reservation).where(Host.id == id)
+        statement = select(HostDB, Reservation).join(Reservation).where(HostDB.id == id)
         host = session.exec(statement).all()
         # Assuming host is a list of tuples or objects, convert it to a dictionary
         reservations_data = [
-            {"host": h.Host.dict(), "reservation": h.Reservation.dict()} for h in host
+            {"host": h.HostDB.dict(), "reservation": h.Reservation.dict()} for h in host
         ]
-        reservations_2 = [{"host": h.Host, "reservation": h.Reservation} for h in host]
+        reservations_2 = [{"host": h.HostDB, "reservation": h.Reservation} for h in host]
 
         return reservations_data
 
 
 def get_host(id: int):
     with Session(engine) as session:
-        statement = select(Host, Reservation).join(Reservation).where(Host.id == id)
-        host: Host = session.exec(statement).all()
+        statement = select(HostDB, Reservation).join(Reservation).where(HostDB.id == id)
+        host: HostDB = session.exec(statement).all()
 
         host.reservations = host.Reservation
         return host
@@ -53,10 +53,10 @@ def get_host(id: int):
 
 def get_host_all(id: int):
     with Session(engine) as session:
-        host = session.get(Host, id)
+        host = session.get(HostDB, id)
 
         statement = select(Reservation).where(Reservation.host_id == id)
-        reservations_list: Host = session.exec(statement).all()
+        reservations_list: HostDB = session.exec(statement).all()
 
         host.reservations = reservations_list
         return host

@@ -7,7 +7,7 @@ from faker import Faker
 
 from api.reservations import validate_reservation
 
-from db.models.host import Host
+from db.models.host import HostDB
 from db.models.reservation import Reservation
 from db.models.user import User
 from db.models.common import get_database_url
@@ -38,7 +38,7 @@ def add_hosts() -> int:
     print("\n---- HOSTS ----")
 
     for i in range(4):
-        host = Host(
+        host = HostDB(
             id=i,
             name=härbärge[i],
             address1=faker.street_address(),

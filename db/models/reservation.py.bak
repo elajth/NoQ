@@ -5,7 +5,7 @@ from sqlmodel import SQLModel, Field, select, Relationship
 from .common import DBCommon
 
 if TYPE_CHECKING:
-    from .host import HostDB
+    from .host import Host
 
 
 class ReservationBase(SQLModel):
@@ -21,7 +21,7 @@ class Reservation(DBCommon, table=True):
 
     host_id: int = Field(index=True, nullable=False, foreign_key="hosts.id")
 
-    host: Optional["HostDB"] = Relationship(back_populates="reservations")
+    host: Optional["Host"] = Relationship(back_populates="reservations")
 
 
 class ReservationCreate(ReservationBase):

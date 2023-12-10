@@ -12,7 +12,7 @@ class HostBase(SQLModel):
     total_available_places: int
 
 
-class Host(HostBase, table=True):
+class HostDB(HostBase, table=True):
     __tablename__ = "hosts"
 
     id: Optional[int] = Field(default=None, primary_key=True)

@@ -4,7 +4,7 @@ from sqlalchemy import func, and_
 from sqlmodel import select, Session
 from db.db_setup import get_db, get_session, engine
 from db.models.reservation import Reservation
-from db.models.host import Host
+from db.models.host import HostDB
 
 router = APIRouter()
 

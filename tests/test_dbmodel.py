@@ -4,8 +4,9 @@ from icecream import ic
 
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
-root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(root_dir)
+# Add root directory to path to be able to find modules
+project_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root_dir)
 
 from db.models.host import Host
 from db.models.reservation import Reservation
@@ -54,16 +55,27 @@ def get_host_all(id: int):
     with Session(engine) as session:
         host = session.get(Host, id)
 
-        statement = select(Reservation).where(Host.id == id)
+        statement = select(Reservation).where(Reservation.host_id == id)
         reservations_list: Host = session.exec(statement).all()
 
         host.reservations = reservations_list
         return host
 
 
-ic(get_host_all(1))
+def test_host_all():
+    assert get_host_all(1) is not None
 
-for host in get_host_reservations(1):
-    ic(host)
 
+def test_host_reservations():
+    n: int = 0
+
+    for host in get_host_reservations(1):
+        n += 1
+        ic(host)
+
+    assert n > 0
+    print(n)
+
+if __name__ == "__main__":
+    test_host_reservations()
 # [ic({"host": h['host'], "reservation": h['reservation']}) for h in host]

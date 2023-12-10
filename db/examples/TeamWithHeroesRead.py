@@ -47,8 +47,6 @@ class TeamDB(TeamBase, DBCommon, table=True):
 
     __tablename__ = "team"
 
-    # id: Optional[int] = Field(default=None, primary_key=True)
-
     heroes: List["Hero"] = Relationship(back_populates="team")
 
 
@@ -90,14 +88,12 @@ class HeroBase(SQLModel):
     team_id: Optional[int] = Field(default=None, foreign_key="team.id")
 
 
-class Hero(HeroBase, table=True):
+class Hero(HeroBase, DBCommon, table=True):
     """
     DB Access
     """
 
     __tablename__ = "hero"
-
-    id: Optional[int] = Field(default=None, primary_key=True)
 
     team: Optional[TeamDB] = Relationship(back_populates="heroes")
 
@@ -178,8 +174,6 @@ def create_db_and_tables():
         session.commit()
 
 
-
-
 def get_session():
     with Session(engine) as session:
         yield session
@@ -195,7 +189,7 @@ def on_startup():
 
 @app.post("/heroes/", response_model=HeroRead)
 def create_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
-    db_hero = Hero.model_validate(hero)
+    db_hero = Hero.from_orm(hero)
     session.add(db_hero)
     session.commit()
     session.refresh(db_hero)
@@ -228,7 +222,7 @@ def update_hero(
     db_hero = session.get(Hero, hero_id)
     if not db_hero:
         raise HTTPException(status_code=404, detail="Hero not found")
-    hero_data = hero.model_dump(exclude_unset=True)
+    hero_data = hero.dict(exclude_unset=True)
     for key, value in hero_data.items():
         setattr(db_hero, key, value)
     session.add(db_hero)
@@ -249,7 +243,7 @@ def delete_hero(*, session: Session = Depends(get_session), hero_id: int):
 
 @app.post("/teams/", response_model=Team)
 def create_team(*, session: Session = Depends(get_session), team: TeamAdd):
-    db_team = TeamDB.model_validate(team)
+    db_team = TeamDB.from_orm(team)
     session.add(db_team)
     session.commit()
     session.refresh(db_team)
@@ -285,7 +279,7 @@ def update_team(
     db_team = session.get(TeamDB, team_id)
     if not db_team:
         raise HTTPException(status_code=404, detail="Team not found")
-    team_data = team.model_dump(exclude_unset=True)
+    team_data = team.dict(exclude_unset=True)
     for key, value in team_data.items():
         setattr(db_team, key, value)
     session.add(db_team)

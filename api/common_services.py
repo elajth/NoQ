@@ -14,13 +14,13 @@ async def do_generate():
     try:
         create_db_tables(True)
 
-        log = str(add_hosts()) + " hosts generated. "
+        hosts = add_hosts()
 
-        add_reservation
-        log += str(add_reservation()) + " reservations generated. "
+        reservations = add_reservation()
 
-        log += str(add_users()) + " users generated. "
-        return log
+        users = add_users()
+        
+        return {"hosts": hosts, "users": users, "reservations": reservations}
 
     except:
         return "Testdata finns redan."

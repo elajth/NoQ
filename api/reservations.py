@@ -35,20 +35,25 @@ async def get_reservations():
 #     return True
 
 
-@router.post("/reservations", response_model=ReservationAdd)
-async def add_reservation(reservation: ReservationAdd):
-    _reservation: ReservationDB = ReservationDB.from_orm(reservation)
-    ic(_reservation)
-    if not valid_reservation(_reservation):
+@router.post("/reservations", response_model=ReservationDB)
+async def add_reservation(
+    *, session: Session = Depends(get_session), reservation: ReservationAdd
+):
+    # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
+    rsrv: ReservationDB = ReservationDB.from_orm(reservation)
+    ic(rsrv)
+    ic(reservation)
+    if not valid_reservation(rsrv):
         raise HTTPException(
             status_code=404, detail="Dubbelbokning samma dag för denna brukare"
         )
-
-    with Session(engine) as session:
-        session.add(_reservation)
-        session.commit()
-        session.refresh(_reservation)
-    return _reservation
+    else:
+        with Session(engine) as session:
+            session.add(rsrv)
+            session.commit()
+            session.refresh(rsrv)
+            ic("ADDED")
+    return reservation
 
 
 @router.get("/reservations/{id}", response_model=Reservation_User)
@@ -63,19 +68,23 @@ async def get_reservation(*, id: int, session: Session = Depends(get_db)):
 def valid_reservation(reservation: ReservationDB) -> bool:
     startdate = func.date(reservation.start_date)
     with get_session() as db:
-        db_reservation = (
-            db.query(ReservationDB)
-            .filter(
-                and_(
-                    startdate == func.date(reservation.start_date),
-                    ReservationDB.user_id == reservation.user_id,
-                )
-            )
-            .first()
+        statement = (
+            select(ReservationDB)
+            .where(ReservationDB.start_date == startdate)
+            .where(ReservationDB.user_id == reservation.user_id)
         )
+        matching_reservation: Reservation = db.execute(statement).first()
+        # matching_reservation = (
+        #     db.query(ReservationDB)
+        #     .filter(
+        #         and_(
+        #             startdate == func.date(reservation.start_date),
+        #             ReservationDB.user_id == reservation.user_id,
+        #         )
+        #     )
+        #     .first()
+        # )
 
-    ic(reservation)
+    ic(matching_reservation)
 
-    # ic(reservation)
-
-    return db_reservation is None
+    return matching_reservation is None

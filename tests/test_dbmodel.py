@@ -10,7 +10,7 @@ sys.path.append(project_root_dir)
 
 from db.models.host import HostDB
 from db.models.reservation import ReservationDB
-from db.models.user import User
+from db.models.user import UserDB
 
 
 from dotenv import load_dotenv

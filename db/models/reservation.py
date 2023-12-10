@@ -5,7 +5,7 @@ from sqlmodel import SQLModel, Field, select, Relationship
 from .common import DBCommon
 
 if TYPE_CHECKING:
-    from .user import User
+    from .user import UserDB
 
 if TYPE_CHECKING:
     from .host import HostDB
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 class ReservationBase(SQLModel):
     start_date: date = Field(index=True, nullable=False)
     user_id: int = Field(index=True, nullable=False)
+    host_id: int = Field(index=True, nullable=False)
 
 
 class ReservationDB(DBCommon, table=True):
@@ -26,10 +27,10 @@ class ReservationDB(DBCommon, table=True):
     user_id: int = Field(index=True, nullable=False, foreign_key="users.id")
 
     host: Optional["HostDB"] = Relationship(back_populates="reservations")
-    user: Optional["User"] = Relationship(back_populates="reserved")
+    user: Optional["UserDB"] = Relationship(back_populates="reserved")
 
 
-class ReservationCreate(ReservationBase):
+class ReservationAdd(ReservationBase):
     pass
 
 
@@ -42,11 +43,27 @@ class ReservationDelete(SQLModel):
 
 
 class UserDetails(SQLModel):
+    id: int
     name: str
     reserved: Optional[ReservationDB] = Relationship(back_populates="user")
 
 
-class ReservationWithUser(ReservationBase):
+class HostDetails(SQLModel):
     id: int
+    name: str
+    reservations: Optional[ReservationDB] = Relationship(back_populates="host")
+
+
+class Reservation_User(SQLModel):
+    id: int
+    start_date: date
 
     user: Optional[UserDetails] = None
+
+
+class Reservation_User_Host(SQLModel):
+    id: int
+    start_date: date
+
+    user: Optional[UserDetails] = None
+    host: Optional[HostDetails] = None

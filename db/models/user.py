@@ -14,21 +14,21 @@ class UserBase(SQLModel):
     unokod: str
 
 
-class User(UserBase, DBCommon, table=True):
+class UserDB(UserBase, DBCommon, table=True):
     __tablename__ = "users"
 
     reserved: Optional[ReservationDB] = Relationship(back_populates="user")
 
 
-class UserCreate(UserBase):
+class UserAdd(UserBase):
     pass
 
 
-class UserRead(UserBase):
+class User(UserBase):
     id: int
 
 
-class UserPatch(SQLModel):
+class UserUpdate(SQLModel):
     name: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None

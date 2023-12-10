@@ -1,7 +1,7 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
-from .reservation import ReservationDB, Reservation, ReservationWithUser
+from .reservation import ReservationDB, Reservation, Reservation_User
 
 
 class HostBase(SQLModel):
@@ -46,9 +46,9 @@ class HostUpdate(SQLModel):
 
 # Note: Without any back_populate makes it
 # possible to retrieve a deep json-structure
-class HostWithReservations(Host):
+class Host_Reservations(Host):
     """
     Host with a list of Reservation
     """
 
-    reservations: List[ReservationWithUser] = []
+    reservations: List[Reservation_User] = []

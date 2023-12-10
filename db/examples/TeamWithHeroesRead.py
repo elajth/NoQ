@@ -188,7 +188,7 @@ def on_startup():
 
 
 @app.post("/heroes/", response_model=HeroRead)
-def create_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
+def add_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
     db_hero = Hero.from_orm(hero)   # TODO: Byt till Hero.model_validate(team) vid ny version av SQLModel
     session.add(db_hero)
     session.commit()
@@ -244,7 +244,7 @@ def delete_hero(*, session: Session = Depends(get_session), hero_id: int):
 
 
 @app.post("/teams/", response_model=Team)
-def create_team(*, session: Session = Depends(get_session), team: TeamAdd):
+def add_team(*, session: Session = Depends(get_session), team: TeamAdd):
     db_team = TeamDB.from_orm(team)  # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
     session.add(db_team)
     session.commit()

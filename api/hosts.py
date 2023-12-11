@@ -2,7 +2,7 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException
 from icecream import ic
 from sqlmodel import select, Session
-from db.db_setup import get_db, engine
+from db.db_setup import yield_session, engine
 from db.models.host import HostDB, Host, Host_Reservations
 from db.models.reservation import ReservationDB
 
@@ -25,7 +25,7 @@ async def list_hosts(skip: int = 0, limit: int = 100):
 
 
 @router.get("/hosts/{id}", response_model=Host_Reservations)
-async def get_host(*, id: int, session: Session = Depends(get_db)):
+async def get_host(*, id: int, session: Session = Depends(yield_session)):
     host = session.get(HostDB, id)
 
     if not host:

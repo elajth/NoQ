@@ -2,7 +2,7 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends
 
 from sqlmodel import select, Session
-from db.db_setup import get_db, engine
+from db.db_setup import yield_session, engine
 from db.models.host import HostDB
 
 from generate import create_db_tables, add_hosts, add_reservation, add_users

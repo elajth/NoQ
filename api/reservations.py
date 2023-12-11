@@ -2,7 +2,7 @@ from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import func, and_
 from sqlmodel import select, Session
-from db.db_setup import get_db, get_session, engine, sqlmodel_session
+from db.db_setup import yield_session, get_session, engine
 from db.models.reservation import (
     ReservationDB,
     Reservation,
@@ -17,9 +17,7 @@ router = APIRouter()
 
 
 @router.get("/reservations", response_model=List[Reservation_User])
-async def get_reservations(
-    *, session: Session = Depends(sqlmodel_session)
-):
+async def get_reservations(*, session: Session = Depends(yield_session)):
     reservation = session.exec(select(ReservationDB)).all()
     return reservation
 
@@ -39,9 +37,9 @@ async def get_reservations(
 
 @router.post("/reservations", response_model=ReservationDB)
 async def add_reservation(
-    *, session: Session = Depends(get_db), reservation: ReservationAdd
+    *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
-    # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
+    # TODO: Byt till ReservationDB.model_validate(team) vid ny version av SQLModel
     rsrv: ReservationDB = ReservationDB.from_orm(reservation)
     if not valid_reservation(rsrv):
         raise HTTPException(
@@ -54,12 +52,12 @@ async def add_reservation(
             session.add(rsrv)
             session.commit()
             session.refresh(rsrv)
-            ic("ADDED")
+            ic("RESERVATION ADDED")
     return rsrv
 
 
 @router.get("/reservations/{id}", response_model=Reservation_User)
-async def get_reservation(*, id: int, session: Session = Depends(get_db)):
+async def get_reservation(*, id: int, session: Session = Depends(yield_session)):
     reservation = session.get(ReservationDB, id)
 
     if not reservation:
@@ -78,6 +76,7 @@ def valid_reservation(reservation: ReservationDB) -> bool:
         existing_reservation: Reservation = db.execute(statement).first()
 
     if existing_reservation is not None:
+        ic("DUBBELBOKNING SAMMA USER")
         ic(existing_reservation)
         return False
 

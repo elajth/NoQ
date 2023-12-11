@@ -37,11 +37,11 @@ class HostAdd(HostBase):
 
 
 class HostUpdate(SQLModel):
-    name: str
-    address1: str
-    address2: str
-    count_of_available_places: int
-    total_available_places: int
+    name: Optional[str] = None
+    address1: Optional[str] = None
+    address2: Optional[str] = None
+    count_of_available_places: Optional[int] = None
+    total_available_places: Optional[int] = None
 
 
 # Note: Without any back_populate makes it

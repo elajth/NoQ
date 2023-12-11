@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
 from db.models.user import UserDB, User, UserAdd, UserUpdate
-from db.db_setup import get_db, engine
+from db.db_setup import yield_session, engine
 from sqlmodel import select, Session
 
 router = APIRouter()

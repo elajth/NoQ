@@ -201,9 +201,12 @@ def select_joined_tables():
         ic(ponies)
         print_code(__file__, 203, 4)
         # Alt 4 - List all dependent objects in "creatures" which is a list[]
-        statement = select(HorseType, Horse).join(HorseType).where(HorseType.type == "Gaited")
+        statement = (
+            select(HorseType, Horse).join(HorseType).where(HorseType.type == "Gaited")
+        )
         result = session.exec(statement).first()
         ic(result)
+
 
 def main():
     create_db_and_tables()

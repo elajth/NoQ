@@ -11,7 +11,7 @@ sys.path.append(project_root_dir)
 from db.models.host import HostDB
 from db.models.reservation import ReservationDB
 from db.models.user import UserDB
-
+from generate import add_hosts, add_reservation, add_users
 
 from dotenv import load_dotenv
 
@@ -21,6 +21,14 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 
 engine = create_engine(DATABASE_URL, echo=True)
+
+
+def create_db_and_tables():
+    SQLModel.metadata.drop_all(engine)
+    SQLModel.metadata.create_all(engine)
+    add_hosts()
+    add_users()
+    add_reservation()
 
 
 def get_host_reservations(id: int):
@@ -88,5 +96,6 @@ def test_host_reservations():
 
 
 if __name__ == "__main__":
+    create_db_and_tables()
     test_host_reservations()
 # [ic({"host": h['host'], "reservation": h['reservation']}) for h in host]

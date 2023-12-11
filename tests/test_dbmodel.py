@@ -39,7 +39,7 @@ def get_host_reservations(id: int):
         host = session.exec(statement).all()
         # Assuming host is a list of tuples or objects, convert it to a dictionary
         reservations_data = [
-            {"host": h.HostDB.dict(), "reservation": h.ReservationDB.dict()}
+            {"host": h.HostDB.model_dump(), "reservation": h.ReservationDB.model_dump()}
             for h in host
         ]
         reservations_2 = [
@@ -60,7 +60,7 @@ def get_host(id: int):
         return host
         # Assuming host is a list of tuples or objects, convert it to a dictionary
         reservations_data = [
-            {"host": host.Host.dict(), "reservation": host.ReservationDB.dict()}
+            {"host": host.Host.model_dump(), "reservation": host.ReservationDB.model_dump()}
         ]
         reservations_2 = [
             {"host": h.Host, "reservation": h.ReservationDB} for h in host

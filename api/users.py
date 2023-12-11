@@ -19,7 +19,7 @@ async def list_users(skip: int = 0, limit: int = 100):
 @router.post("/users", response_model=UserDB)
 async def create_new_user(user: UserAdd):
     with Session(engine) as session:
-        db_user: UserDB = UserDB.from_orm(user)
+        db_user: UserDB = UserDB.model_validate(user)
         session.add(db_user)
         session.commit()
         session.refresh(db_user)
@@ -41,7 +41,7 @@ def update_user(id: int, user: UserUpdate):
         db_user = session.get(UserDB, id)
         if not db_user:
             raise HTTPException(status_code=404, detail="User not found")
-        user_data = user.dict(exclude_unset=True)
+        user_data = user.model_dump(exclude_unset=True)
         for key, value in user_data.items():
             setattr(db_user, key, value)
         session.add(db_user)

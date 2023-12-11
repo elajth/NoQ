@@ -39,8 +39,7 @@ async def get_reservations(*, session: Session = Depends(yield_session)):
 async def add_reservation(
     *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
-    # TODO: Byt till ReservationDB.model_validate(team) vid ny version av SQLModel
-    rsrv: ReservationDB = ReservationDB.from_orm(reservation)
+    rsrv: ReservationDB = ReservationDB.model_validate(reservation)
     if not valid_reservation(rsrv):
         raise HTTPException(
             status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm

@@ -16,7 +16,6 @@ engine = create_engine(
 )
 
 
-# DB utilities SQLAlchemy
 def yield_session():
     """
     Yields a session

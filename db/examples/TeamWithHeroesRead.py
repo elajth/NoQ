@@ -174,7 +174,7 @@ def create_db_and_tables():
         session.commit()
 
 
-def get_session():
+def yield_session():
     with Session(engine) as session:
         yield session
 
@@ -188,7 +188,7 @@ def on_startup():
 
 
 @app.post("/heroes/", response_model=HeroRead)
-def add_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
+def add_hero(*, session: Session = Depends(yield_session), hero: HeroCreate):
     db_hero = Hero.from_orm(hero)   # TODO: Byt till Hero.model_validate(team) vid ny version av SQLModel
     session.add(db_hero)
     session.commit()
@@ -199,7 +199,7 @@ def add_hero(*, session: Session = Depends(get_session), hero: HeroCreate):
 @app.get("/heroes/", response_model=List[HeroRead])
 def list_heroes(
     *,
-    session: Session = Depends(get_session),
+    session: Session = Depends(yield_session),
     offset: int = 0,
     limit: int = Query(default=100, le=100),
 ):
@@ -208,7 +208,7 @@ def list_heroes(
 
 
 @app.get("/heroes/{hero_id}", response_model=HeroReadWithTeam)
-def read_hero(*, session: Session = Depends(get_session), hero_id: int):
+def read_hero(*, session: Session = Depends(yield_session), hero_id: int):
     hero = session.get(Hero, hero_id)
     if not hero:
         raise HTTPException(status_code=404, detail="Hero not found")
@@ -217,7 +217,7 @@ def read_hero(*, session: Session = Depends(get_session), hero_id: int):
 
 @app.patch("/heroes/{hero_id}", response_model=HeroRead)
 def update_hero(
-    *, session: Session = Depends(get_session), hero_id: int, hero: HeroUpdate
+    *, session: Session = Depends(yield_session), hero_id: int, hero: HeroUpdate
 ):
     db_hero = session.get(Hero, hero_id)
     if not db_hero:
@@ -234,7 +234,7 @@ def update_hero(
 
 
 @app.delete("/heroes/{hero_id}")
-def delete_hero(*, session: Session = Depends(get_session), hero_id: int):
+def delete_hero(*, session: Session = Depends(yield_session), hero_id: int):
     hero = session.get(Hero, hero_id)
     if not hero:
         raise HTTPException(status_code=404, detail="Hero not found")
@@ -244,7 +244,7 @@ def delete_hero(*, session: Session = Depends(get_session), hero_id: int):
 
 
 @app.post("/teams/", response_model=Team)
-def add_team(*, session: Session = Depends(get_session), team: TeamAdd):
+def add_team(*, session: Session = Depends(yield_session), team: TeamAdd):
     db_team = TeamDB.from_orm(team)  # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
     session.add(db_team)
     session.commit()
@@ -255,7 +255,7 @@ def add_team(*, session: Session = Depends(get_session), team: TeamAdd):
 @app.get("/teams/", response_model=List[Team])
 def list_teams(
     *,
-    session: Session = Depends(get_session),
+    session: Session = Depends(yield_session),
     offset: int = 0,
     limit: int = Query(default=100, le=100),
 ):
@@ -264,7 +264,7 @@ def list_teams(
 
 
 @app.get("/teams/{team_id}", response_model=TeamWithHeroes)
-def read_team(*, team_id: int, session: Session = Depends(get_session)):
+def read_team(*, team_id: int, session: Session = Depends(yield_session)):
     team = session.get(TeamDB, team_id)
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -274,7 +274,7 @@ def read_team(*, team_id: int, session: Session = Depends(get_session)):
 @app.patch("/teams/{team_id}", response_model=Team)
 def update_team(
     *,
-    session: Session = Depends(get_session),
+    session: Session = Depends(yield_session),
     team_id: int,
     team: TeamUpdate,
 ):
@@ -291,7 +291,7 @@ def update_team(
 
 
 @app.delete("/teams/{team_id}")
-def delete_team(*, session: Session = Depends(get_session), team_id: int):
+def delete_team(*, session: Session = Depends(yield_session), team_id: int):
     team = session.get(TeamDB, team_id)
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")

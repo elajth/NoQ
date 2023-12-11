@@ -76,7 +76,7 @@ def valid_reservation(reservation: ReservationDB) -> bool:
         existing_reservation: Reservation = db.execute(statement).first()
 
     if existing_reservation is not None:
-        ic("DUBBELBOKNING SAMMA USER")
+        ic("Dubbelbokning")
         ic(existing_reservation)
         return False
 

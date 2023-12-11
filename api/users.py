@@ -9,14 +9,14 @@ from sqlmodel import select, Session
 router = APIRouter()
 
 
-@router.get("/users", response_model=List[UserDB])
+@router.get("/users", response_model=List[User])
 async def list_users(skip: int = 0, limit: int = 100):
     with Session(engine) as session:
         users = session.exec(select(UserDB)).all()
         return users
 
 
-@router.post("/users", response_model=UserDB)
+@router.post("/users", response_model=User)
 async def create_new_user(user: UserAdd):
     with Session(engine) as session:
         db_user: UserDB = UserDB.model_validate(user)

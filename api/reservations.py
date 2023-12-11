@@ -1,17 +1,14 @@
-from typing import Optional, List
+from typing import List
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy import func, and_
+from icecream import ic
 from sqlmodel import select, Session
 from db.db_setup import yield_session, get_session, engine
 from db.models.reservation import (
     ReservationDB,
     Reservation,
     Reservation_User,
-    Reservation_User_Host,
     ReservationAdd,
 )
-from db.models.host import HostDB
-from icecream import ic
 
 router = APIRouter()
 
@@ -35,11 +32,28 @@ async def get_reservations(*, session: Session = Depends(yield_session)):
 #     return True
 
 
-@router.post("/reservations", response_model=ReservationDB)
+@router.post("/reservations", response_model=Reservation)
 async def add_reservation(
     *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
     rsrv: ReservationDB = ReservationDB.model_validate(reservation)
+
+    if reservation.user_id < 1:
+        ic(reservation)
+        raise HTTPException(
+            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            detail="Error: user_id = 0",
+            headers={"Error": "EndpointParameterError", "Msg": "user_id = 0"},
+        )
+
+    if reservation.host_id < 1:
+        ic(reservation)
+        raise HTTPException(
+            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            detail="Error: host_id = 0",
+            headers={"Error": "EndpointParameterError", "Msg": "host_id = 0"},
+        )
+
     if not valid_reservation(rsrv):
         raise HTTPException(
             status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm

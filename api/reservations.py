@@ -2,6 +2,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Depends
 from icecream import ic
 from sqlmodel import select, Session
+from sqlalchemy import func
 from db.db_setup import yield_session, get_session, engine
 from db.models.reservation import (
     ReservationDB,

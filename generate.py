@@ -1,4 +1,3 @@
-import os
 import random
 from sqlmodel import SQLModel, Session, create_engine
 from datetime import datetime, timedelta
@@ -11,6 +10,7 @@ from db.models.host import HostDB
 from db.models.reservation import ReservationDB
 from db.models.user import UserDB
 from db.models.common import get_database_url
+from sqlalchemy import func
 
 engine = create_engine(get_database_url(), echo=False)
 

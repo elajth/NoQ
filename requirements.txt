@@ -1,9 +1,9 @@
 fastapi
-sqlalchemy
 uvicorn
 python-dotenv
 icecream
-pydantic
+sqlalchemy
+pydantic==1.10.13
 sqlmodel==0.0.14
 httpx
 psycopg2

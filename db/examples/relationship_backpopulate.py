@@ -159,7 +159,7 @@ def select_horses():
 
 def select_joined_tables():
     with Session(engine) as session:
-        print_code(__file__, 163, 4)
+        print_code(__file__, 163, 7)
         # Alt 1 - Full JOIN btw all objects without filter
         statement = (
             select(Team, HorseType, Horse)
@@ -170,7 +170,7 @@ def select_joined_tables():
         result = session.exec(statement)
         ic(result.all())
 
-        print_code(__file__, 169, 18)
+        print_code(__file__, 174, 18)
         # Alt 2 - Full JOIN and WHERE statement for the first object
         statement = (
             select(Horse, HorseType, Team)
@@ -189,7 +189,7 @@ def select_joined_tables():
             hero_spider_boy.updated_at,
             hero_spider_boy.updated_at - hero_spider_boy.created_at,
         )
-        print_code(__file__, 188, 9)
+        print_code(__file__, 193, 9)
         # Alt 3 - Full JOIN and filter on another object with WHERE
         statement = (
             select(Horse, HorseType, Team)
@@ -199,12 +199,11 @@ def select_joined_tables():
         )
         ponies = session.exec(statement).all()
         ic(ponies)
-        print_code(__file__, 198, 4)
+        print_code(__file__, 203, 4)
         # Alt 4 - List all dependent objects in "creatures" which is a list[]
-        statement = select(HorseType).join(Horse).where(HorseType.type == "Gaited")
-        type = session.exec(statement).first()
-        ic(type.creatures)
-
+        statement = select(HorseType, Horse).join(HorseType).where(HorseType.type == "Gaited")
+        result = session.exec(statement).first()
+        ic(result)
 
 def main():
     create_db_and_tables()

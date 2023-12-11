@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 from icecream import ic
 from faker import Faker
 
-from api.reservations import validate_reservation
+from api.reservations import valid_reservation
 
-from db.models.host import Host
-from db.models.reservation import Reservation
-from db.models.user import User
+from db.models.host import HostDB
+from db.models.reservation import ReservationDB
+from db.models.user import UserDB
 from db.models.common import get_database_url
 
 engine = create_engine(get_database_url(), echo=False)
@@ -18,7 +18,9 @@ engine = create_engine(get_database_url(), echo=False)
 def create_db_tables(drop_all: bool = False):
     if drop_all:
         SQLModel.metadata.drop_all(engine)
+        ic("Drop all tables")
     # Create the table
+    ic("Create DB tables")
     SQLModel.metadata.create_all(engine)
 
 
@@ -36,7 +38,7 @@ def add_hosts() -> int:
     print("\n---- HOSTS ----")
 
     for i in range(4):
-        host = Host(
+        host = HostDB(
             id=i,
             name=härbärge[i],
             address1=faker.street_address(),
@@ -58,7 +60,7 @@ def add_reservation() -> int:
     session = get_session()
 
     for i in range(15):
-        reservation = Reservation(
+        reservation = ReservationDB(
             id=i,
             start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
             end_date=datetime.now(),
@@ -67,7 +69,7 @@ def add_reservation() -> int:
             user_id=random.randint(1, 10),
         )
         with Session(engine) as session:
-            if validate_reservation(reservation):
+            if valid_reservation(reservation):
                 session.add(reservation)
                 session.commit()
                 state = "Reservation added"
@@ -88,7 +90,7 @@ def add_users() -> int:
 
     for i in range(25):
         namn = faker.name()
-        user = User(
+        user = UserDB(
             id=i,
             name=namn,
             phone="070" + f"{random.randint(0,9)}-{random.randint(121212,909090)}",

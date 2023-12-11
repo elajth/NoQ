@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from datetime import datetime
 
-from api import hosts, reservations, users
+from api import hosts, reservations, users, common_services
 from db.db_setup import engine
 from db.models import host, reservation, user
 
@@ -22,3 +22,4 @@ def health_status():
 app.include_router(users.router)
 app.include_router(hosts.router)
 app.include_router(reservations.router)
+app.include_router(common_services.router)

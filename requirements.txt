@@ -8,3 +8,4 @@ sqlmodel
 httpx
 psycopg2
 faker
+GitPython

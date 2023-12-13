@@ -50,7 +50,6 @@ class Host(SQLModel):
 class Reservation_User(SQLModel):
     id: int
     start_date: date
-    host_id: int
     # id: Optional[int] = None
     # start_date: Optional[date] = None
     # host_id: Optional[int] = None
@@ -61,7 +60,6 @@ class Reservation_User(SQLModel):
 class Reservation_User_Host(SQLModel):
     id: int
     start_date: date
-    host_id: int
 
     user: Optional[User] = None
     host: Optional[Host] = None

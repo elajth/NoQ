@@ -78,7 +78,7 @@ async def get_reservation(*, id: int, session: Session = Depends(yield_session))
     return reservation
 
 
-@router.get("/hosts/reservations/{host_id}", response_model=ReservationDB)
+@router.get("/hosts/reservations/{host_id}", response_model=List[Reservation_User])
 async def list_reservation_for_host(
     *, host_id: int, session: Session = Depends(yield_session)
 ):

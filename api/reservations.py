@@ -40,8 +40,9 @@ async def add_reservation(
 
     if reservation.user_id < 1:
         ic(reservation)
+        # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
         raise HTTPException(
-            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            status_code=400,  
             detail="Error: user_id = 0",
             headers={"Error": "EndpointParameterError", "Msg": "user_id = 0"},
         )
@@ -49,14 +50,14 @@ async def add_reservation(
     if reservation.host_id < 1:
         ic(reservation)
         raise HTTPException(
-            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            status_code=400, 
             detail="Error: host_id = 0",
             headers={"Error": "EndpointParameterError", "Msg": "host_id = 0"},
         )
 
     if not valid_reservation(rsrv):
         raise HTTPException(
-            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            status_code=400, 
             detail="Dubbelbokning samma dag för denna brukare",
             headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
         )

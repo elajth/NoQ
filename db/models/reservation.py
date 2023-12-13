@@ -1,7 +1,6 @@
 from typing import Optional
-from datetime import datetime, date
-from git import TYPE_CHECKING
-from sqlmodel import SQLModel, Field, select, Relationship
+from datetime import date
+from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
 
 
@@ -15,7 +14,7 @@ class ReservationDB(DBCommon, table=True):
     __tablename__ = "reservations"
 
     start_date: date = Field(index=True, nullable=False)
-    
+
     host_id: int = Field(index=True, nullable=False, foreign_key="hosts.id")
     user_id: int = Field(index=True, nullable=False, foreign_key="users.id")
 

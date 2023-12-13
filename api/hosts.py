@@ -1,27 +1,27 @@
-from typing import Optional, List
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
-from icecream import ic
 from sqlmodel import select, Session
-from db.db_setup import yield_session, engine
-from db.models.host import HostDB, Host, Host_Reservations
-from db.models.reservation import ReservationDB
-
-from generate import create_db_tables, add_hosts, add_reservation, add_users
+from db.db_setup import yield_session
+from db.models.host import HostDB, Host, Host_Reservations, HostAdd, HostUpdate
 
 router = APIRouter()
 
 
 @router.get("/hosts", response_model=List[Host])
-async def list_hosts(skip: int = 0, limit: int = 100):
-    with Session(engine) as session:
-        hosts = session.exec(select(HostDB)).all()
-        return hosts
+async def list_hosts(
+    *, session: Session = Depends(yield_session), skip: int = 0, limit: int = 100
+):
+    hosts = session.exec(select(HostDB).offset(skip).limit(limit)).all()
+    return hosts
 
 
-# @router.post("/hosts")
-# async def create_host(host: Host):
-#     # hosts.append(host)
-#     return "Success"
+@router.post("/hosts", response_model=Host)
+async def add_host(*, session: Session = Depends(yield_session), host: HostAdd):
+    db_host: HostDB = HostDB.model_validate(host)
+    session.add(db_host)
+    session.commit()
+    session.refresh(db_host)
+    return db_host
 
 
 @router.get("/hosts/{id}", response_model=Host_Reservations)
@@ -31,3 +31,17 @@ async def get_host(*, id: int, session: Session = Depends(yield_session)):
     if not host:
         raise HTTPException(status_code=404, detail="Host not found")
     return host
+
+
+@router.patch("/hosts/{id}", response_model=Host)
+def update_host(*, session: Session = Depends(yield_session), host: HostUpdate):
+    db_host = session.get(HostDB, id)
+    if not db_host:
+        raise HTTPException(status_code=404, detail="Host not found")
+    host_data = host.model_dump(exclude_unset=True)
+    for key, value in host_data.items():
+        setattr(db_host, key, value)
+    session.add(db_host)
+    session.commit()
+    session.refresh(db_host)
+    return db_host

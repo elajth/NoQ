@@ -77,8 +77,19 @@ def test_reservation_user():
     response = client.get("/reservations")
     assert response.status_code == 200
     added_rsrv = response.json()[1]["id"]
-    
+
     response = client.get(f"/reservations/{added_rsrv}")
     assert response.status_code == 200
     list = dict(response.json())["user"]
     assert len(list) > 0
+
+
+def test_host_reservations():
+    response = client.get("/hosts/reservations/1")
+    assert response.status_code == 200
+    added_rsrv = response.json()
+    return added_rsrv
+    # response = client.get(f"/reservations/{added_rsrv}")
+    # assert response.status_code == 200
+    # list = dict(response.json())["user"]
+    # assert len(list) > 0

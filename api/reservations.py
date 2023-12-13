@@ -9,28 +9,27 @@ from db.models.reservation import (
     Reservation,
     Reservation_User,
     ReservationAdd,
+    Host_Reservation,
 )
 
 router = APIRouter()
 
 
 @router.get("/reservations", response_model=List[Reservation_User])
-async def get_reservations(*, session: Session = Depends(yield_session)):
-    reservation = session.exec(select(ReservationDB)).all()
+async def list_reservations(
+    *,
+    session: Session = Depends(yield_session),
+    # start_date: Date = "2022-01-01",
+    skip: int = 0,
+    limit: int = 100
+):
+    reservation = session.exec(
+        select(ReservationDB)
+        .offset(skip)
+        .limit(limit)
+        .order_by(ReservationDB.start_date)
+    ).all()
     return reservation
-
-
-# @router.get("/reservations", response_model=List[Reservation])
-# async def get_reservations():
-#     with Session(engine) as session:
-#         reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
-#         return reservation
-
-
-# @router.post("/reservations")
-# async def create_reservation(reservation: Reservation):
-#     # reservations_list.append(reservation)
-#     return True
 
 
 @router.post("/reservations", response_model=Reservation)
@@ -79,6 +78,21 @@ async def get_reservation(*, id: int, session: Session = Depends(yield_session))
     return reservation
 
 
+@router.get("/hosts/reservations/{host_id}", response_model=ReservationDB)
+async def list_reservation_for_host(
+    *, host_id: int, session: Session = Depends(yield_session)
+):
+    stmt = select(ReservationDB).where(ReservationDB.host_id == host_id)
+
+    reservations = session.exec(stmt).all()
+
+    if not reservations:
+        raise HTTPException(status_code=404, detail="No reservations found")
+    ic(reservations)
+
+    return reservations
+
+
 def valid_reservation(reservation: ReservationDB) -> bool:
     startdate = func.date(reservation.start_date)
     with get_session() as db:
@@ -87,7 +101,7 @@ def valid_reservation(reservation: ReservationDB) -> bool:
             .where(ReservationDB.start_date == startdate)
             .where(ReservationDB.user_id == reservation.user_id)
         )
-        existing_reservation: Reservation = db.execute(statement).first()
+        existing_reservation: Reservation = db.exec(statement).first()
 
     if existing_reservation is not None:
         ic("Dubbelbokning")

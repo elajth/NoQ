@@ -85,7 +85,7 @@ def test_reservation_user():
 
 
 def test_host_reservations():
-    response = client.get("/hosts/reservations/1")
+    response = client.get("/hosts/1/reservations/")
     assert response.status_code == 200
     added_rsrv = response.json()
     return added_rsrv

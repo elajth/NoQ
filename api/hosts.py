@@ -1,8 +1,10 @@
 from typing import List
+from icecream import ic
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select, Session
 from db.db_setup import yield_session
 from db.models.host import HostDB, Host, Host_Reservations, HostAdd, HostUpdate
+from db.models.reservation import ReservationDB, Reservation_User
 
 router = APIRouter()
 
@@ -45,3 +47,18 @@ def update_host(*, session: Session = Depends(yield_session), host: HostUpdate):
     session.commit()
     session.refresh(db_host)
     return db_host
+
+
+@router.get("/hosts/{host_id}/reservations", response_model=List[Reservation_User])
+async def list_reservation_for_host(
+    *, host_id: int, session: Session = Depends(yield_session)
+):
+    stmt = select(ReservationDB).where(ReservationDB.host_id == host_id)
+
+    reservations = session.exec(stmt).all()
+
+    if not reservations:
+        raise HTTPException(status_code=404, detail="No reservations found")
+    ic(reservations)
+
+    return reservations

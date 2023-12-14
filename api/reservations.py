@@ -42,7 +42,7 @@ async def add_reservation(
         ic(reservation)
         # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
         raise HTTPException(
-            status_code=400,  
+            status_code=400,
             detail="Error: user_id = 0",
             headers={"Error": "EndpointParameterError", "Msg": "user_id = 0"},
         )
@@ -50,14 +50,14 @@ async def add_reservation(
     if reservation.host_id < 1:
         ic(reservation)
         raise HTTPException(
-            status_code=400, 
+            status_code=400,
             detail="Error: host_id = 0",
             headers={"Error": "EndpointParameterError", "Msg": "host_id = 0"},
         )
 
     if not valid_reservation(rsrv):
         raise HTTPException(
-            status_code=400, 
+            status_code=400,
             detail="Dubbelbokning samma dag för denna brukare",
             headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
         )
@@ -77,21 +77,6 @@ async def get_reservation(*, id: int, session: Session = Depends(yield_session))
     if not reservation:
         raise HTTPException(status_code=404, detail="Reservation not found")
     return reservation
-
-
-@router.get("/hosts/reservations/{host_id}", response_model=List[Reservation_User])
-async def list_reservation_for_host(
-    *, host_id: int, session: Session = Depends(yield_session)
-):
-    stmt = select(ReservationDB).where(ReservationDB.host_id == host_id)
-
-    reservations = session.exec(stmt).all()
-
-    if not reservations:
-        raise HTTPException(status_code=404, detail="No reservations found")
-    ic(reservations)
-
-    return reservations
 
 
 def valid_reservation(reservation: ReservationDB) -> bool:

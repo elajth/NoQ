@@ -39,21 +39,28 @@ async def get_reservations(*, session: Session = Depends(yield_session)):
 async def add_reservation(
     *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
-    # TODO: Byt till ReservationDB.model_validate(team) vid ny version av SQLModel
+    # TODO: Byt till ReservationDB.model_validate(team)
+    # vid ny version av SQLModel
     rsrv: ReservationDB = ReservationDB.from_orm(reservation)
 
     if not valid_reservation(rsrv):
         raise HTTPException(
             status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
             detail="Dubbelbokning samma dag för denna brukare",
-            headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
+            headers={
+                "Error": "UniquenessRequirement",
+                "Msg": "User is booked already"
+                },
         )
 
     elif not place_available(rsrv):
         raise HTTPException(
             status_code=400,
             detail="No available places",
-            headers={"Error": "UniquenessRequirement", "Msg": "No available places"},
+            headers={
+                "Error": "UniquenessRequirement",
+                "Msg": "No available places"
+                },
         )
 
     else:
@@ -93,12 +100,18 @@ def valid_reservation(reservation: ReservationDB) -> bool:
 
 
 def place_available(reservation: ReservationDB):
+    """
+    Checks if the current reservation from add_reservation can fit in the
+    available places of the host
+    """
+
     host_id = reservation.host_id
     with get_session() as db:
         statement = (
             select(HostDB.total_available_places)
             .where(HostDB.id == host_id)
         )
+        # Possibility to retrieve value as int instead of tuple?
         total_places: Reservation = db.execute(statement).first()
         ic(total_places)
 

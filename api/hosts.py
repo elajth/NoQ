@@ -50,7 +50,7 @@ def update_host(*, session: Session = Depends(yield_session), host: HostUpdate):
 
 
 @router.get("/hosts/{host_id}/reservations", response_model=List[Reservation_User])
-async def list_reservation_for_host(
+async def list_reservations_for_host(
     *, host_id: int, session: Session = Depends(yield_session)
 ):
     stmt = select(ReservationDB).where(ReservationDB.host_id == host_id)

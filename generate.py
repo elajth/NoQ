@@ -48,7 +48,7 @@ def count_records_in_database() -> str:
     hosts: int = table_count(HostDB.__tablename__)
     users: int = table_count(UserDB.__tablename__)
 
-    return f"Nbr of hosts={hosts}, users={users}, reservations={reservations} in the database"
+    return f"<br/>hosts: {hosts}<br/>users: {users}<br/>reservations: {reservations}"
 
 
 def get_session():

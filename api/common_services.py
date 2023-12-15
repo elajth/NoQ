@@ -1,4 +1,8 @@
+import os
+from icecream import ic
 from fastapi import APIRouter
+from fastapi.responses import HTMLResponse
+
 
 from generate import (
     create_db_tables,
@@ -13,9 +17,15 @@ router = APIRouter()
 
 @router.get("/")
 def health_status():
-    return {
-        "Health status": "NoQ API backend status = OK. " + count_records_in_database()
-    }
+    path = os.getcwd()
+    filename = path+"/api/index.html"
+    data = ""
+    if os.path.isfile(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = file.read()
+    status = "API status = OK <br/><br/>Data:" + count_records_in_database()
+    html = data.replace("{health_status}", status)
+    return HTMLResponse(content=html)
 
 
 @router.get("/generate")

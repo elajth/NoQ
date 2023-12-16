@@ -24,7 +24,7 @@ def create_db_tables(drop_all: bool = False):
     SQLModel.metadata.create_all(engine)
 
 
-def table_count(table_name: str) -> int:
+def table_count_rows(table_name: str) -> int:
     """
     SELECT count("table_name".id)
     """
@@ -44,9 +44,9 @@ def table_count(table_name: str) -> int:
 
 
 def count_records_in_database() -> str:
-    reservations: int = table_count(ReservationDB.__tablename__)
-    hosts: int = table_count(HostDB.__tablename__)
-    users: int = table_count(UserDB.__tablename__)
+    reservations: int = table_count_rows(ReservationDB.__tablename__)
+    hosts: int = table_count_rows(HostDB.__tablename__)
+    users: int = table_count_rows(UserDB.__tablename__)
 
     return f"<br/>hosts: {hosts}<br/>users: {users}<br/>reservations: {reservations}"
 

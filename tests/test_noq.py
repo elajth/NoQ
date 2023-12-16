@@ -1,7 +1,5 @@
 from fastapi.testclient import TestClient
 from main import app
-from sqlmodel import Date
-from datetime import date
 
 
 client = TestClient(app)
@@ -76,7 +74,22 @@ def test_host_with_reservations():
 
 
 def test_reservation_user():
-    response = client.get("/reservations/1")
+    response = client.get("/reservations")
+    assert response.status_code == 200
+    added_rsrv = response.json()[1]["id"]
+
+    response = client.get(f"/reservations/{added_rsrv}")
     assert response.status_code == 200
     list = dict(response.json())["user"]
     assert len(list) > 0
+
+
+def test_host_reservations():
+    response = client.get("/hosts/1/reservations/")
+    assert response.status_code == 200
+    added_rsrv = response.json()
+    return added_rsrv
+    # response = client.get(f"/reservations/{added_rsrv}")
+    # assert response.status_code == 200
+    # list = dict(response.json())["user"]
+    # assert len(list) > 0

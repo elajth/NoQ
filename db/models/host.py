@@ -1,7 +1,7 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
-from .reservation import ReservationDB, Reservation, Reservation_User
+from .reservation import ReservationDB, Reservation_User
 
 
 class HostBase(SQLModel):

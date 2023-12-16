@@ -18,7 +18,7 @@ router = APIRouter()
 @router.get("/")
 def health_status():
     path = os.getcwd()
-    filename = path+"/api/index.html"
+    filename = path+"/templates/index.html"
     data = ""
     if os.path.isfile(filename):
         with open(filename, "r", encoding="utf-8") as file:

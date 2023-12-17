@@ -1,14 +1,7 @@
 from typing import Optional
-from datetime import datetime, date
-from git import TYPE_CHECKING
-from sqlmodel import SQLModel, Field, select, Relationship
+from datetime import date
+from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
-
-if TYPE_CHECKING:
-    from .user import UserDB
-
-if TYPE_CHECKING:
-    from .host import HostDB
 
 
 class ReservationBase(SQLModel):
@@ -21,7 +14,6 @@ class ReservationDB(DBCommon, table=True):
     __tablename__ = "reservations"
 
     start_date: date = Field(index=True, nullable=False)
-    user_id: int = Field(index=True, nullable=False)
 
     host_id: int = Field(index=True, nullable=False, foreign_key="hosts.id")
     user_id: int = Field(index=True, nullable=False, foreign_key="users.id")
@@ -42,13 +34,13 @@ class ReservationDelete(SQLModel):
     id: int
 
 
-class UserDetails(SQLModel):
+class User(SQLModel):
     id: int
     name: str
     reserved: Optional[ReservationDB] = Relationship(back_populates="user")
 
 
-class HostDetails(SQLModel):
+class Host(SQLModel):
     id: int
     name: str
     reservations: Optional[ReservationDB] = Relationship(back_populates="host")
@@ -57,13 +49,21 @@ class HostDetails(SQLModel):
 class Reservation_User(SQLModel):
     id: int
     start_date: date
+    # id: Optional[int] = None
+    # start_date: Optional[date] = None
+    # host_id: Optional[int] = None
 
-    user: Optional[UserDetails] = None
+    user: Optional[User] = None
 
 
 class Reservation_User_Host(SQLModel):
     id: int
     start_date: date
 
-    user: Optional[UserDetails] = None
-    host: Optional[HostDetails] = None
+    user: Optional[User] = None
+    host: Optional[Host] = None
+
+
+class Host_Reservation(SQLModel):
+    start_date: date
+    host_id: int

@@ -1,41 +1,38 @@
-from typing import Optional, List
+from typing import List
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy import func, and_
+from icecream import ic
 from sqlmodel import select, Session
+from sqlalchemy import func
 from db.db_setup import yield_session, get_session, engine
 from db.models.reservation import (
     ReservationDB,
     Reservation,
     Reservation_User,
-    Reservation_User_Host,
     ReservationAdd,
+    Host_Reservation,
 )
-from db.models.host import HostDB
-from icecream import ic
 
 router = APIRouter()
 
 
 @router.get("/reservations", response_model=List[Reservation_User])
-async def get_reservations(*, session: Session = Depends(yield_session)):
-    reservation = session.exec(select(ReservationDB)).all()
+async def list_reservations(
+    *,
+    session: Session = Depends(yield_session),
+    # start_date: Date = "2022-01-01",
+    skip: int = 0,
+    limit: int = 100
+):
+    reservation = session.exec(
+        select(ReservationDB)
+        .offset(skip)
+        .limit(limit)
+        .order_by(ReservationDB.start_date)
+    ).all()
     return reservation
 
 
-# @router.get("/reservations", response_model=List[Reservation])
-# async def get_reservations():
-#     with Session(engine) as session:
-#         reservation = session.exec(select(Reservation, Host).join(Host, isouter=False))
-#         return reservation
-
-
-# @router.post("/reservations")
-# async def create_reservation(reservation: Reservation):
-#     # reservations_list.append(reservation)
-#     return True
-
-
-@router.post("/reservations", response_model=ReservationDB)
+@router.post("/reservations", response_model=Reservation)
 async def add_reservation(
     *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
@@ -43,9 +40,26 @@ async def add_reservation(
     # vid ny version av SQLModel
     rsrv: ReservationDB = ReservationDB.from_orm(reservation)
 
+    if reservation.user_id < 1:
+        ic(reservation)
+        # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+        raise HTTPException(
+            status_code=400,
+            detail="Error: user_id = 0",
+            headers={"Error": "EndpointParameterError", "Msg": "user_id = 0"},
+        )
+
+    if reservation.host_id < 1:
+        ic(reservation)
+        raise HTTPException(
+            status_code=400,
+            detail="Error: host_id = 0",
+            headers={"Error": "EndpointParameterError", "Msg": "host_id = 0"},
+        )
+
     if not valid_reservation(rsrv):
         raise HTTPException(
-            status_code=400,  # https://docs.oracle.com/en/cloud/saas/marketing/eloqua-develop/Developers/GettingStarted/APIRequests/Validation-errors.htm
+            status_code=400,
             detail="Dubbelbokning samma dag för denna brukare",
             headers={
                 "Error": "UniquenessRequirement",
@@ -89,7 +103,7 @@ def valid_reservation(reservation: ReservationDB) -> bool:
             .where(ReservationDB.start_date == startdate)
             .where(ReservationDB.user_id == reservation.user_id)
         )
-        existing_reservation: Reservation = db.execute(statement).first()
+        existing_reservation: Reservation = db.exec(statement).first()
 
     if existing_reservation is not None:
         ic("Dubbelbokning")

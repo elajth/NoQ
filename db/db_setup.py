@@ -9,8 +9,11 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 if "sqlite" in DATABASE_URL:
     connect_args = {"check_same_thread": False}
+else:
+    connect_args ={}
 
 DB_ECHO = bool(os.getenv("DB_ECHO", "False").lower() == "true")
+ic(DB_ECHO)
 engine = create_engine(
     DATABASE_URL, connect_args=connect_args, future=True, echo=DB_ECHO
 )

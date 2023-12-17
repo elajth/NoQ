@@ -1,13 +1,31 @@
-from typing import Optional, List
-from fastapi import APIRouter, Depends
+import os
+from icecream import ic
+from fastapi import APIRouter
+from fastapi.responses import HTMLResponse
 
-from sqlmodel import select, Session
-from db.db_setup import yield_session, engine
-from db.models.host import HostDB
 
-from generate import create_db_tables, add_hosts, add_reservation, add_users
+from generate import (
+    create_db_tables,
+    add_hosts,
+    add_reservation,
+    add_users,
+    count_records_in_database,
+)
 
 router = APIRouter()
+
+
+@router.get("/")
+def health_status():
+    path = os.getcwd()
+    filename = path+"/templates/index.html"
+    data = ""
+    if os.path.isfile(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = file.read()
+    status = "API status = OK <br/><br/>Data:" + count_records_in_database()
+    html = data.replace("{health_status}", status)
+    return HTMLResponse(content=html)
 
 
 @router.get("/generate")
@@ -23,5 +41,5 @@ async def do_generate():
 
         return {"hosts": hosts, "users": users, "reservations": reservations}
 
-    except:
+    except Exception:
         return "Testdata finns redan."

@@ -11,6 +11,7 @@ from db.models.reservation import (
     ReservationAdd,
     Host_Reservation,
 )
+from db.models.host import HostDB
 
 router = APIRouter()
 

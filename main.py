@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from api import hosts, reservations, users, common_services
+from api import hosts, reservations, users, common_services, rooms
 
 app = FastAPI(
     title="NoQ booking app",
@@ -15,4 +15,5 @@ app = FastAPI(
 app.include_router(users.router)
 app.include_router(hosts.router)
 app.include_router(reservations.router)
+app.include_router(rooms.router)
 app.include_router(common_services.router)

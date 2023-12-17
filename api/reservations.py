@@ -36,7 +36,9 @@ async def list_reservations(
 async def add_reservation(
     *, session: Session = Depends(yield_session), reservation: ReservationAdd
 ):
-    rsrv: ReservationDB = ReservationDB.model_validate(reservation)
+    # TODO: Byt till ReservationDB.model_validate(team)
+    # vid ny version av SQLModel
+    rsrv: ReservationDB = ReservationDB.from_orm(reservation)
 
     if reservation.user_id < 1:
         ic(reservation)
@@ -59,8 +61,22 @@ async def add_reservation(
         raise HTTPException(
             status_code=400,
             detail="Dubbelbokning samma dag för denna brukare",
-            headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
+            headers={
+                "Error": "UniquenessRequirement",
+                "Msg": "User is booked already"
+                },
         )
+
+    elif not place_available(rsrv):
+        raise HTTPException(
+            status_code=400,
+            detail="No available places",
+            headers={
+                "Error": "UniquenessRequirement",
+                "Msg": "No available places"
+                },
+        )
+
     else:
         with Session(engine) as session:
             session.add(rsrv)
@@ -92,6 +108,38 @@ def valid_reservation(reservation: ReservationDB) -> bool:
     if existing_reservation is not None:
         ic("Dubbelbokning")
         ic(existing_reservation)
+        return False
+
+    return True
+
+
+def place_available(reservation: ReservationDB):
+    """
+    Checks if the current reservation from add_reservation can fit in the
+    available places of the host
+    """
+
+    host_id = reservation.host_id
+    with get_session() as db:
+        statement = (
+            select(HostDB.total_available_places)
+            .where(HostDB.id == host_id)
+        )
+        # Possibility to retrieve value as int instead of tuple?
+        total_places: Reservation = db.execute(statement).first()
+        ic(total_places)
+
+    with get_session() as db:
+        statement = (
+            select(func.count(ReservationDB.id))
+            .where(ReservationDB.host_id == host_id)
+        )
+        reservations: Reservation = db.execute(statement).one()
+        ic(reservations)
+
+    if total_places[0] <= reservations[0]:
+        ic("No available places")
+        ic("Places:", total_places, "Reservations:", reservations)
         return False
 
     return True

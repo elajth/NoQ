@@ -1,6 +1,9 @@
+import pytest
 import sys
 import os
+from faker import Faker
 from icecream import ic
+from sqlmodel import StaticPool
 
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
@@ -11,66 +14,39 @@ sys.path.append(project_root_dir)
 from db.models.host import HostDB
 from db.models.reservation import ReservationDB
 from db.models.user import UserDB
+
 from generate import add_hosts, add_reservation, add_users
 
-from dotenv import load_dotenv
 
-# Read settings from .env file
-load_dotenv()
+def get_session(engine):
+    """
+    Returns an in memory database session
+    """
+    with Session(engine) as session:
+        return session
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
 
-engine = create_engine(DATABASE_URL, echo=True)
+def create_tables_add_content():
+    # Use in memory database
+    engine = create_engine(
+        "sqlite:///",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        echo=True,
+    )
 
+    ic("create in memory database tables")
 
-def create_db_and_tables():
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
-    add_hosts()
-    add_users()
-    add_reservation()
+    add_hosts(engine)
+    add_users(engine)
+    add_reservation(engine)
+    return engine
 
 
-def get_host_reservations(id: int):
-    with Session(engine) as session:
-        statement = (
-            select(HostDB, ReservationDB).join(ReservationDB).where(HostDB.id == id)
-        )
-        host = session.exec(statement).all()
-        # Assuming host is a list of tuples or objects, convert it to a dictionary
-        reservations_data = [
-            {"host": h.HostDB.model_dump(), "reservation": h.ReservationDB.model_dump()}
-            for h in host
-        ]
-
-        return reservations_data
-
-
-def get_host(id: int):
-    with Session(engine) as session:
-        statement = (
-            select(HostDB, ReservationDB).join(ReservationDB).where(HostDB.id == id)
-        )
-        host: HostDB = session.exec(statement).all()
-
-        host.reservations = host.Reservation
-        return host
-        # Assuming host is a list of tuples or objects, convert it to a dictionary
-        reservations_data = [
-            {
-                "host": host.Host.model_dump(),
-                "reservation": host.ReservationDB.model_dump(),
-            }
-        ]
-        reservations_2 = [
-            {"host": h.Host, "reservation": h.ReservationDB} for h in host
-        ]
-
-        return reservations_data
-
-
-def get_host_all(id: int):
-    with Session(engine) as session:
+def get_host_all(engine, id: int):
+    with get_session(engine) as session:
         host = session.get(HostDB, id)
 
         statement = select(ReservationDB).where(ReservationDB.host_id == id)
@@ -81,21 +57,63 @@ def get_host_all(id: int):
 
 
 def test_host_all():
-    assert get_host_all(1) is not None
+    engine = create_tables_add_content()
+    host = get_host_all(engine, 1)
+    ic(host)
+    assert host is not None
+
+
+def get_host_reservations(engine, id: int):
+    with get_session(engine) as session:
+        statement = (
+            select(HostDB, ReservationDB).join(ReservationDB).where(HostDB.id == id)
+        )
+        host = session.exec(statement).all()
+        # Assuming host is a list of tuples or objects, convert it to a dictionary
+        reservations_data = [
+            {"host": h.HostDB.dict(), "reservation": h.ReservationDB.dict()}
+            for h in host
+        ]
+        reservations_2 = [
+            {"host": h.HostDB, "reservation": h.ReservationDB} for h in host
+        ]
+
+        return reservations_data
+
+
+def get_host(engine, id: int):
+    with get_session(engine) as session:
+        statement = (
+            select(HostDB, ReservationDB).join(ReservationDB).where(HostDB.id == id)
+        )
+        host: HostDB = session.exec(statement).all()
+
+        host.reservations = host.Reservation
+        return host
+        # Assuming host is a list of tuples or objects, convert it to a dictionary
+        reservations_data = [
+            {"host": host.Host.dict(), "reservation": host.ReservationDB.dict()}
+        ]
+        reservations_2 = [
+            {"host": h.Host, "reservation": h.ReservationDB} for h in host
+        ]
+
+        return reservations_data
 
 
 def test_host_reservations():
+
+    engine = create_tables_add_content()
     n: int = 0
 
-    for host in get_host_reservations(1):
+    for reservation in get_host_reservations(engine, 1):
         n += 1
-        ic(host)
 
     assert n > 0
-    print(n)
 
 
 if __name__ == "__main__":
-    create_db_and_tables()
-    test_host_reservations()
+    test_host_all()
+    # create_tables_add_content()
+    # test_host_reservations()
 # [ic({"host": h['host'], "reservation": h['reservation']}) for h in host]

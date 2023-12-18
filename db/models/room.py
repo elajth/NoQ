@@ -15,6 +15,6 @@ class RoomBase(SQLModel):
     room_type: RoomType
 
 class HostDB(RoomBase, DBCommon, table=True):
-    __tablename__ = "hosts"
+    __tablename__ = "room"
 
     #reservations: List["ReservationDB"] = Relationship(back_populates="host")

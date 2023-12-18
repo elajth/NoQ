@@ -8,7 +8,9 @@ router = APIRouter()
 
 
 @router.get("/users", response_model=List[User])
-async def list_users(*, session: Session = Depends(yield_session), skip: int = 0, limit: int = 100):
+async def list_users(
+    *, session: Session = Depends(yield_session), skip: int = 0, limit: int = 100
+):
     users = session.exec(select(UserDB).offset(skip).limit(limit)).all()
     return users
 
@@ -19,6 +21,7 @@ async def add_user(*, session: Session = Depends(yield_session), user: UserAdd):
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
+
     return db_user
 
 

@@ -47,10 +47,10 @@ def test_add_reservation():
     }
     response = client.post("/users", json=person)
     assert response.status_code == 200
-    added_user_id = response.json()["id"]
+    added_userid = response.json()["id"]
 
     # Add reservation for new user
-    data = {"start_date": "2024-01-01", "user_id": added_user_id, "host_id": 1}
+    data = {"start_date": "2024-01-01", "user_id": added_userid, "host_id": 4}
     response = client.post("/reservations", json=data)
     assert response.status_code == 200
 
@@ -87,9 +87,3 @@ def test_reservation_user():
 def test_host_reservations():
     response = client.get("/hosts/1/reservations/")
     assert response.status_code == 200
-    added_rsrv = response.json()
-    return added_rsrv
-    # response = client.get(f"/reservations/{added_rsrv}")
-    # assert response.status_code == 200
-    # list = dict(response.json())["user"]
-    # assert len(list) > 0

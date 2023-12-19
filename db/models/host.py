@@ -4,7 +4,7 @@ from .common import DBCommon
 from git import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .reservation import ReservationDB, Reservation_User
+    from .room import RoomDB
 
 
 class HostBase(SQLModel):
@@ -20,7 +20,7 @@ class HostDB(HostBase, DBCommon, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
 
-    reservations: List["ReservationDB"] = Relationship(back_populates="host")
+    rooms: List["RoomDB"] = Relationship(back_populates="host")
 
 
 class Host(HostBase):
@@ -49,9 +49,9 @@ class HostUpdate(SQLModel):
 
 # Note: Without any back_populate makes it
 # possible to retrieve a deep json-structure
-class Host_Reservations(Host):
+class Host_Rooms(Host):
     """
     Host with a list of Reservation
     """
 
-    reservations: List["Reservation_User"] = []
+    rooms: List["Room"] = []

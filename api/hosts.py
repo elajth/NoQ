@@ -3,7 +3,7 @@ from icecream import ic
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select, Session
 from db.db_setup import yield_session
-from db.models.host import HostDB, Host, Host_Reservations, HostAdd, HostUpdate
+from db.models.host import HostDB, Host, Host_Rooms, HostAdd, HostUpdate
 from db.models.reservation import ReservationDB, Reservation_User
 
 router = APIRouter()

@@ -13,7 +13,8 @@ sys.path.append(project_root_dir)
 
 from db.models.host import HostDB
 from db.models.reservation import ReservationDB
-from db.models.user import UserDB
+from db.models.room import RoomDB
+
 
 from generate import add_hosts, add_reservation, add_users
 
@@ -49,10 +50,10 @@ def get_host_all(engine, id: int):
     with get_session(engine) as session:
         host = session.get(HostDB, id)
 
-        statement = select(ReservationDB).where(ReservationDB.host_id == id)
-        reservations_list: HostDB = session.exec(statement).all()
+        statement = select(RoomDB).where(RoomDB.host_id == id)
+        rooms_list: HostDB = session.exec(statement).all()
 
-        host.reservations = reservations_list
+        host.rooms = rooms_list
         return host
 
 
@@ -102,7 +103,6 @@ def get_host(engine, id: int):
 
 
 def test_host_reservations():
-
     engine = create_tables_add_content()
     n: int = 0
 

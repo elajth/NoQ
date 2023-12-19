@@ -22,7 +22,7 @@ class ReservationDB(DBCommon, table=True):
     host_id: int = Field(index=True, nullable=False, foreign_key="hosts.id")
     user_id: int = Field(index=True, nullable=False, foreign_key="users.id")
 
-    host: Optional["HostDB"] = Relationship(back_populates="reservations")
+    # host: Optional["HostDB"] = Relationship(back_populates="reservations")
     user: Optional["UserDB"] = Relationship(back_populates="reserved")
 
 

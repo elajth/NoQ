@@ -26,7 +26,7 @@ async def add_host(*, session: Session = Depends(yield_session), host: HostAdd):
     return db_host
 
 
-@router.get("/hosts/{id}", response_model=Host_Reservations)
+@router.get("/hosts/{id}", response_model=Host)
 async def get_host(*, id: int, session: Session = Depends(yield_session)):
     host = session.get(HostDB, id)
 

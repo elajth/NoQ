@@ -9,7 +9,6 @@ from db.models.reservation import (
     Reservation,
     Reservation_User,
     ReservationAdd,
-    Host_Reservation,
 )
 from db.models.host import HostDB
 

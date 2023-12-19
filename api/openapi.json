@@ -1,520 +1,98 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-      "title": "NoQ booking app",
-      "description": "App for users to search beds and create reservations",
-      "contact": {
-        "name": "Johan",
-        "email": "elajth@proton.me"
-      },
-      "version": "0.0.1"
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NoQ booking app",
+    "description": "App for users to search beds and create reservations",
+    "contact": {
+      "name": "Johan",
+      "email": "elajth@proton.me"
     },
-    "paths": {
-      "/users": {
-        "get": {
-          "summary": "List Users",
-          "operationId": "list_users_users_get",
-          "parameters": [
-            {
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "title": "Skip",
-                "default": 0
-              },
-              "name": "skip",
-              "in": "query"
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "List Users",
+        "operationId": "list_users_users_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Skip",
+              "default": 0
             },
-            {
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "title": "Limit",
-                "default": 100
-              },
-              "name": "limit",
-              "in": "query"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "items": {
-                      "$ref": "#/components/schemas/db__models__user__User"
-                    },
-                    "type": "array",
-                    "title": "Response List Users Users Get"
-                  }
-                }
-              }
+            "name": "skip",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Limit",
+              "default": 100
             },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
+            "name": "limit",
+            "in": "query"
           }
-        },
-        "post": {
-          "summary": "Add User",
-          "operationId": "add_user_users_post",
-          "requestBody": {
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserAdd"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
+                  "items": {
                     "$ref": "#/components/schemas/db__models__user__User"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
+                  },
+                  "type": "array",
+                  "title": "Response List Users Users Get"
                 }
               }
             }
-          }
-        }
-      },
-      "/users/{id}": {
-        "get": {
-          "summary": "Get User",
-          "operationId": "get_user_users__id__get",
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {}
-                }
-              }
-            }
-          }
-        },
-        "patch": {
-          "summary": "Update User",
-          "operationId": "update_user_users__id__patch",
-          "requestBody": {
+          },
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserUpdate"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/db__models__user__User"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
         }
       },
-      "/hosts": {
-        "get": {
-          "summary": "List Hosts",
-          "operationId": "list_hosts_hosts_get",
-          "parameters": [
-            {
-              "required": false,
+      "post": {
+        "summary": "Add User",
+        "operationId": "add_user_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "integer",
-                "title": "Skip",
-                "default": 0
-              },
-              "name": "skip",
-              "in": "query"
-            },
-            {
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "title": "Limit",
-                "default": 100
-              },
-              "name": "limit",
-              "in": "query"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "items": {
-                      "$ref": "#/components/schemas/Host"
-                    },
-                    "type": "array",
-                    "title": "Response List Hosts Hosts Get"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
+                "$ref": "#/components/schemas/UserAdd"
               }
             }
-          }
+          },
+          "required": true
         },
-        "post": {
-          "summary": "Add Host",
-          "operationId": "add_host_hosts_post",
-          "requestBody": {
+        "responses": {
+          "200": {
+            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostAdd"
+                  "$ref": "#/components/schemas/db__models__user__User"
                 }
               }
-            },
-            "required": true
+            }
           },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Host"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/hosts/{id}": {
-        "get": {
-          "summary": "Get Host",
-          "operationId": "get_host_hosts__id__get",
-          "parameters": [
-            {
-              "required": true,
-              "schema": {
-                "type": "integer",
-                "title": "Id"
-              },
-              "name": "id",
-              "in": "path"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Host_Reservations"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "patch": {
-          "summary": "Update Host",
-          "operationId": "update_host_hosts__id__patch",
-          "requestBody": {
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostUpdate"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Host"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/hosts/{host_id}/reservations": {
-        "get": {
-          "summary": "List Reservations For Host",
-          "operationId": "list_reservations_for_host_hosts__host_id__reservations_get",
-          "parameters": [
-            {
-              "required": true,
-              "schema": {
-                "type": "integer",
-                "title": "Host Id"
-              },
-              "name": "host_id",
-              "in": "path"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "items": {
-                      "$ref": "#/components/schemas/Reservation_User"
-                    },
-                    "type": "array",
-                    "title": "Response List Reservations For Host Hosts  Host Id  Reservations Get"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/reservations": {
-        "get": {
-          "summary": "List Reservations",
-          "operationId": "list_reservations_reservations_get",
-          "parameters": [
-            {
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "title": "Skip",
-                "default": 0
-              },
-              "name": "skip",
-              "in": "query"
-            },
-            {
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "title": "Limit",
-                "default": 100
-              },
-              "name": "limit",
-              "in": "query"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "items": {
-                      "$ref": "#/components/schemas/Reservation_User"
-                    },
-                    "type": "array",
-                    "title": "Response List Reservations Reservations Get"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "summary": "Add Reservation",
-          "operationId": "add_reservation_reservations_post",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReservationAdd"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Reservation"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/reservations/{id}": {
-        "get": {
-          "summary": "Get Reservation",
-          "operationId": "get_reservation_reservations__id__get",
-          "parameters": [
-            {
-              "required": true,
-              "schema": {
-                "type": "integer",
-                "title": "Id"
-              },
-              "name": "id",
-              "in": "path"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Reservation_User"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Validation Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HTTPValidationError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/": {
-        "get": {
-          "summary": "Health Status",
-          "operationId": "health_status__get",
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "/generate": {
-        "get": {
-          "summary": "Do Generate",
-          "operationId": "do_generate_generate_get",
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "content": {
-                "application/json": {
-                  "schema": {}
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -522,376 +100,809 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "HTTPValidationError": {
-          "properties": {
-            "detail": {
-              "items": {
-                "$ref": "#/components/schemas/ValidationError"
-              },
-              "type": "array",
-              "title": "Detail"
+    "/users/{id}": {
+      "get": {
+        "summary": "Get User",
+        "operationId": "get_user_users__id__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update User",
+        "operationId": "update_user_users__id__patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
             }
           },
-          "type": "object",
-          "title": "HTTPValidationError"
+          "required": true
         },
-        "Host": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "address1": {
-              "type": "string",
-              "title": "Address1"
-            },
-            "address2": {
-              "type": "string",
-              "title": "Address2"
-            },
-            "count_of_available_places": {
-              "type": "integer",
-              "title": "Count Of Available Places"
-            },
-            "total_available_places": {
-              "type": "integer",
-              "title": "Total Available Places"
-            },
-            "id": {
-              "type": "integer",
-              "title": "Id"
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/db__models__user__User"
+                }
+              }
             }
           },
-          "type": "object",
-          "required": [
-            "name",
-            "address1",
-            "address2",
-            "count_of_available_places",
-            "total_available_places",
-            "id"
-          ],
-          "title": "Host",
-          "description": "Härbärge"
-        },
-        "HostAdd": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "address1": {
-              "type": "string",
-              "title": "Address1"
-            },
-            "address2": {
-              "type": "string",
-              "title": "Address2"
-            },
-            "count_of_available_places": {
-              "type": "integer",
-              "title": "Count Of Available Places"
-            },
-            "total_available_places": {
-              "type": "integer",
-              "title": "Total Available Places"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
             }
+          }
+        }
+      }
+    },
+    "/hosts": {
+      "get": {
+        "summary": "List Hosts",
+        "operationId": "list_hosts_hosts_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Skip",
+              "default": 0
+            },
+            "name": "skip",
+            "in": "query"
           },
-          "type": "object",
-          "required": [
-            "name",
-            "address1",
-            "address2",
-            "count_of_available_places",
-            "total_available_places"
-          ],
-          "title": "HostAdd",
-          "description": "Lägg till härbärge"
-        },
-        "HostUpdate": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "address1": {
-              "type": "string",
-              "title": "Address1"
-            },
-            "address2": {
-              "type": "string",
-              "title": "Address2"
-            },
-            "count_of_available_places": {
+          {
+            "required": false,
+            "schema": {
               "type": "integer",
-              "title": "Count Of Available Places"
+              "title": "Limit",
+              "default": 100
             },
-            "total_available_places": {
-              "type": "integer",
-              "title": "Total Available Places"
-            }
-          },
-          "type": "object",
-          "title": "HostUpdate"
-        },
-        "Host_Reservations": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "address1": {
-              "type": "string",
-              "title": "Address1"
-            },
-            "address2": {
-              "type": "string",
-              "title": "Address2"
-            },
-            "count_of_available_places": {
-              "type": "integer",
-              "title": "Count Of Available Places"
-            },
-            "total_available_places": {
-              "type": "integer",
-              "title": "Total Available Places"
-            },
-            "id": {
-              "type": "integer",
-              "title": "Id"
-            },
-            "reservations": {
-              "items": {
-                "$ref": "#/components/schemas/Reservation_User"
-              },
-              "type": "array",
-              "title": "Reservations",
-              "default": []
-            }
-          },
-          "type": "object",
-          "required": [
-            "name",
-            "address1",
-            "address2",
-            "count_of_available_places",
-            "total_available_places",
-            "id"
-          ],
-          "title": "Host_Reservations",
-          "description": "Host with a list of Reservation"
-        },
-        "Reservation": {
-          "properties": {
-            "start_date": {
-              "type": "string",
-              "format": "date",
-              "title": "Start Date"
-            },
-            "user_id": {
-              "type": "integer",
-              "title": "User Id"
-            },
-            "host_id": {
-              "type": "integer",
-              "title": "Host Id"
-            },
-            "id": {
-              "type": "integer",
-              "title": "Id"
-            }
-          },
-          "type": "object",
-          "required": [
-            "start_date",
-            "user_id",
-            "host_id",
-            "id"
-          ],
-          "title": "Reservation"
-        },
-        "ReservationAdd": {
-          "properties": {
-            "start_date": {
-              "type": "string",
-              "format": "date",
-              "title": "Start Date"
-            },
-            "user_id": {
-              "type": "integer",
-              "title": "User Id"
-            },
-            "host_id": {
-              "type": "integer",
-              "title": "Host Id"
-            }
-          },
-          "type": "object",
-          "required": [
-            "start_date",
-            "user_id",
-            "host_id"
-          ],
-          "title": "ReservationAdd"
-        },
-        "Reservation_User": {
-          "properties": {
-            "id": {
-              "type": "integer",
-              "title": "Id"
-            },
-            "start_date": {
-              "type": "string",
-              "format": "date",
-              "title": "Start Date"
-            },
-            "user": {
-              "$ref": "#/components/schemas/db__models__reservation__User"
-            }
-          },
-          "type": "object",
-          "required": [
-            "id",
-            "start_date"
-          ],
-          "title": "Reservation_User"
-        },
-        "UserAdd": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "phone": {
-              "type": "string",
-              "title": "Phone"
-            },
-            "email": {
-              "type": "string",
-              "title": "Email"
-            },
-            "unokod": {
-              "type": "string",
-              "title": "Unokod"
-            }
-          },
-          "type": "object",
-          "required": [
-            "name",
-            "phone",
-            "email",
-            "unokod"
-          ],
-          "title": "UserAdd"
-        },
-        "UserUpdate": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "phone": {
-              "type": "string",
-              "title": "Phone"
-            },
-            "email": {
-              "type": "string",
-              "title": "Email"
-            },
-            "unokod": {
-              "type": "string",
-              "title": "Unokod"
-            }
-          },
-          "type": "object",
-          "title": "UserUpdate"
-        },
-        "ValidationError": {
-          "properties": {
-            "loc": {
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Host"
                   },
-                  {
-                    "type": "integer"
-                  }
-                ]
-              },
-              "type": "array",
-              "title": "Location"
-            },
-            "msg": {
-              "type": "string",
-              "title": "Message"
-            },
-            "type": {
-              "type": "string",
-              "title": "Error Type"
+                  "type": "array",
+                  "title": "Response List Hosts Hosts Get"
+                }
+              }
             }
           },
-          "type": "object",
-          "required": [
-            "loc",
-            "msg",
-            "type"
-          ],
-          "title": "ValidationError"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Host",
+        "operationId": "add_host_hosts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostAdd"
+              }
+            }
+          },
+          "required": true
         },
-        "db__models__reservation__User": {
-          "properties": {
-            "id": {
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Host"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hosts/{id}": {
+      "get": {
+        "summary": "Get Host",
+        "operationId": "get_host_hosts__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
               "type": "integer",
               "title": "Id"
             },
-            "name": {
-              "type": "string",
-              "title": "Name"
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Host_Reservations"
+                }
+              }
             }
           },
-          "type": "object",
-          "required": [
-            "id",
-            "name"
-          ],
-          "title": "User"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Host",
+        "operationId": "update_host_hosts__id__patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostUpdate"
+              }
+            }
+          },
+          "required": true
         },
-        "db__models__user__User": {
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Host"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hosts/{host_id}/reservations": {
+      "get": {
+        "summary": "List Reservations For Host",
+        "operationId": "list_reservations_for_host_hosts__host_id__reservations_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Host Id"
             },
-            "phone": {
-              "type": "string",
-              "title": "Phone"
+            "name": "host_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Reservation_User"
+                  },
+                  "type": "array",
+                  "title": "Response List Reservations For Host Hosts  Host Id  Reservations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations": {
+      "get": {
+        "summary": "List Reservations",
+        "operationId": "list_reservations_reservations_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Skip",
+              "default": 0
             },
-            "email": {
-              "type": "string",
-              "title": "Email"
+            "name": "skip",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Limit",
+              "default": 100
             },
-            "unokod": {
-              "type": "string",
-              "title": "Unokod"
-            },
-            "id": {
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Reservation_User"
+                  },
+                  "type": "array",
+                  "title": "Response List Reservations Reservations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Reservation",
+        "operationId": "add_reservation_reservations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationAdd"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{id}": {
+      "get": {
+        "summary": "Get Reservation",
+        "operationId": "get_reservation_reservations__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
               "type": "integer",
               "title": "Id"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation_User"
+                }
+              }
             }
           },
-          "type": "object",
-          "required": [
-            "name",
-            "phone",
-            "email",
-            "unokod",
-            "id"
-          ],
-          "title": "User"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Health Status",
+        "operationId": "health_status__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate": {
+      "get": {
+        "summary": "Do Generate",
+        "operationId": "do_generate_generate_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Host": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address1": {
+            "type": "string",
+            "title": "Address1"
+          },
+          "address2": {
+            "type": "string",
+            "title": "Address2"
+          },
+          "count_of_available_places": {
+            "type": "integer",
+            "title": "Count Of Available Places"
+          },
+          "total_available_places": {
+            "type": "integer",
+            "title": "Total Available Places"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "address1",
+          "address2",
+          "count_of_available_places",
+          "total_available_places",
+          "id"
+        ],
+        "title": "Host",
+        "description": "Härbärge"
+      },
+      "HostAdd": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address1": {
+            "type": "string",
+            "title": "Address1"
+          },
+          "address2": {
+            "type": "string",
+            "title": "Address2"
+          },
+          "count_of_available_places": {
+            "type": "integer",
+            "title": "Count Of Available Places"
+          },
+          "total_available_places": {
+            "type": "integer",
+            "title": "Total Available Places"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "address1",
+          "address2",
+          "count_of_available_places",
+          "total_available_places"
+        ],
+        "title": "HostAdd",
+        "description": "Lägg till härbärge"
+      },
+      "HostUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address1": {
+            "type": "string",
+            "title": "Address1"
+          },
+          "address2": {
+            "type": "string",
+            "title": "Address2"
+          },
+          "count_of_available_places": {
+            "type": "integer",
+            "title": "Count Of Available Places"
+          },
+          "total_available_places": {
+            "type": "integer",
+            "title": "Total Available Places"
+          }
+        },
+        "type": "object",
+        "title": "HostUpdate"
+      },
+      "Host_Reservations": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "address1": {
+            "type": "string",
+            "title": "Address1"
+          },
+          "address2": {
+            "type": "string",
+            "title": "Address2"
+          },
+          "count_of_available_places": {
+            "type": "integer",
+            "title": "Count Of Available Places"
+          },
+          "total_available_places": {
+            "type": "integer",
+            "title": "Total Available Places"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "reservations": {
+            "items": {
+              "$ref": "#/components/schemas/Reservation_User"
+            },
+            "type": "array",
+            "title": "Reservations",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "address1",
+          "address2",
+          "count_of_available_places",
+          "total_available_places",
+          "id"
+        ],
+        "title": "Host_Reservations",
+        "description": "Host with a list of Reservation"
+      },
+      "Reservation": {
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "host_id": {
+            "type": "integer",
+            "title": "Host Id"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_date",
+          "user_id",
+          "host_id",
+          "id"
+        ],
+        "title": "Reservation"
+      },
+      "ReservationAdd": {
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "host_id": {
+            "type": "integer",
+            "title": "Host Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_date",
+          "user_id",
+          "host_id"
+        ],
+        "title": "ReservationAdd"
+      },
+      "Reservation_User": {
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "host_id": {
+            "type": "integer",
+            "title": "Host Id"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "user": {
+            "$ref": "#/components/schemas/db__models__reservation__User"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_date",
+          "user_id",
+          "host_id",
+          "id",
+          "user"
+        ],
+        "title": "Reservation_User"
+      },
+      "UserAdd": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "unokod": {
+            "type": "string",
+            "title": "Unokod"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "email",
+          "unokod"
+        ],
+        "title": "UserAdd"
+      },
+      "UserUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "unokod": {
+            "type": "string",
+            "title": "Unokod"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "db__models__reservation__User": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "User"
+      },
+      "db__models__user__User": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "unokod": {
+            "type": "string",
+            "title": "Unokod"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "email",
+          "unokod",
+          "id"
+        ],
+        "title": "User"
+      }
+    }
   }
+}

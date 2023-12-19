@@ -4,11 +4,6 @@ from .common import DBCommon
 from .host import HostDB
 from .reservation import ReservationDB
 
-class RoomType(DBCommon, table=True):
-    __table__ = "room_type"
-    type_name: str
-
-
 class RoomBase(SQLModel):
     """
     A class to represent the rooms of the host

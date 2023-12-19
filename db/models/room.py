@@ -1,21 +1,25 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
-from enum import
 from .common import DBCommon
-from .reservation import ReservationDB, Reservation_User
-
+from .host import HostDB
+from .reservation import ReservationDB
 
 class RoomType(DBCommon, table=True):
     __table__ = "room_type"
     type_name: str
 
+
 class RoomBase(SQLModel):
-    name: str
-    description: str
-    nbr_of_beds: int
-    room_type: RoomType
+    """
+    A class to represent the rooms of the host
+    """
+    description: Optional[str] = None
+    total_places: int
+    host_id: int = Field(index=True, nullable=False)
 
 class RoomDB(RoomBase, DBCommon, table=True):
-    __tablename__ = "room"
+    __tablename__ = "rooms"
+    # beds = List["BedDB"] = Relationship(back_populates="beds")
 
-    #reservations: List["ReservationDB"] = Relationship(back_populates="host")
+class RoomAdd(RoomBase):
+    pass

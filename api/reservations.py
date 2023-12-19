@@ -11,6 +11,7 @@ from db.models.reservation import (
     ReservationAdd,
     Host_Reservation,
 )
+from db.models.host import HostDB
 
 router = APIRouter()
 
@@ -61,20 +62,14 @@ async def add_reservation(
         raise HTTPException(
             status_code=400,
             detail="Dubbelbokning samma dag för denna brukare",
-            headers={
-                "Error": "UniquenessRequirement",
-                "Msg": "User is booked already"
-                },
+            headers={"Error": "UniquenessRequirement", "Msg": "User is booked already"},
         )
 
     elif not place_available(rsrv):
         raise HTTPException(
             status_code=400,
             detail="No available places",
-            headers={
-                "Error": "UniquenessRequirement",
-                "Msg": "No available places"
-                },
+            headers={"Error": "UniquenessRequirement", "Msg": "No available places"},
         )
 
     else:

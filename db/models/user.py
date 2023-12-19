@@ -4,7 +4,8 @@ from sqlmodel import SQLModel, Relationship
 from .common import DBCommon
 from git import TYPE_CHECKING
 
-from .reservation import ReservationDB
+if TYPE_CHECKING:
+    from .reservation import ReservationDB
 
 
 class UserBase(SQLModel):
@@ -17,7 +18,7 @@ class UserBase(SQLModel):
 class UserDB(UserBase, DBCommon, table=True):
     __tablename__ = "users"
 
-    reserved: Optional[ReservationDB] = Relationship(back_populates="user")
+    reserved: Optional["ReservationDB"] = Relationship(back_populates="user")
 
 
 class UserAdd(UserBase):

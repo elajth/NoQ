@@ -2,6 +2,10 @@ from typing import Optional
 from datetime import date
 from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
+from git import TYPE_CHECKING
+
+from .user import User
+from .host import Host
 
 
 class ReservationBase(SQLModel):
@@ -34,36 +38,10 @@ class ReservationDelete(SQLModel):
     id: int
 
 
-class User(SQLModel):
-    id: int
-    name: str
-    reserved: Optional[ReservationDB] = Relationship(back_populates="user")
+class Reservation_User(Reservation):
+    user: User
 
 
-class Host(SQLModel):
-    id: int
-    name: str
-    reservations: Optional[ReservationDB] = Relationship(back_populates="host")
-
-
-class Reservation_User(SQLModel):
-    id: int
-    start_date: date
-    # id: Optional[int] = None
-    # start_date: Optional[date] = None
-    # host_id: Optional[int] = None
-
-    user: Optional[User] = None
-
-
-class Reservation_User_Host(SQLModel):
-    id: int
-    start_date: date
-
-    user: Optional[User] = None
-    host: Optional[Host] = None
-
-
-class Host_Reservation(SQLModel):
-    start_date: date
-    host_id: int
+class Reservation_User_Host(Reservation):
+    user: User
+    host: Host

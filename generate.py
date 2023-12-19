@@ -12,19 +12,20 @@ from db.models.reservation import ReservationDB
 from db.models.user import UserDB
 from db.models.common import get_database_url
 
-engine = create_engine(get_database_url(), echo=False)
-
 
 def create_db_tables(drop_all: bool = False):
+    engine = create_engine(get_database_url(), echo=False)
+
     if drop_all:
         SQLModel.metadata.drop_all(engine)
         ic("Drop all DB tables")
     # Create the table
     ic("Create DB tables")
     SQLModel.metadata.create_all(engine)
+    return engine
 
 
-def table_count_rows(table_name: str) -> int:
+def table_count_rows(engine, table_name: str) -> int:
     """
     SELECT count("table_name".id)
     """
@@ -40,32 +41,34 @@ def table_count_rows(table_name: str) -> int:
         except Exception:
             return 0
 
-    return 0
 
-
-def count_records_in_database() -> str:
-    reservations: int = table_count_rows(ReservationDB.__tablename__)
-    hosts: int = table_count_rows(HostDB.__tablename__)
-    users: int = table_count_rows(UserDB.__tablename__)
+def count_records_in_database(engine) -> str:
+    reservations: int = table_count_rows(engine, ReservationDB.__tablename__)
+    hosts: int = table_count_rows(engine, HostDB.__tablename__)
+    users: int = table_count_rows(engine, UserDB.__tablename__)
 
     return f"<br/>hosts: {hosts}<br/>users: {users}<br/>reservations: {reservations}"
 
 
-def get_session():
+def get_session(engine):
     with Session(engine) as session:
         return session
 
 
-def add_hosts() -> int:
+def set_testmode(test_engine):
+    engine
+
+
+def add_hosts(engine) -> int:
     faker = Faker("sv_SE")
-    session = get_session()
+    session = get_session(engine)
 
     härbärge = [
         "Korskyrkan",
         "Grimmans Akutboende",
-        "Bostället",
         "Stadsmissionen",
         "Ny gemenskap",
+        "Bostället",
     ]
 
     print("\n---- HOSTS ----")
@@ -76,8 +79,8 @@ def add_hosts() -> int:
             name=härbärge[i],
             address1=faker.street_address(),
             address2=faker.postcode() + " " + faker.city(),
-            count_of_available_places=i,
-            total_available_places=i + 1,
+            count_of_available_places=i * 2 + 1,
+            total_available_places=i * 2 + 1,
         )
 
         with Session(engine) as session:
@@ -89,8 +92,8 @@ def add_hosts() -> int:
     return i + 1
 
 
-def add_reservation() -> int:
-    session = get_session()
+def add_reservation(engine) -> int:
+    session = get_session(engine)
     i = 0
     while i < 20:
         reservation = ReservationDB(
@@ -115,9 +118,10 @@ def add_reservation() -> int:
     return i
 
 
-def add_users() -> int:
+def add_users(engine) -> int:
+    session = get_session(engine)
+
     faker = Faker("sv_SE")
-    session = get_session()
 
     print("\n---- USERS ----")
 
@@ -140,7 +144,7 @@ def add_users() -> int:
 
 
 if __name__ == "__main__":
-    create_db_tables(drop_all=True)
-    add_hosts()
-    add_users()
-    add_reservation()
+    engine = create_db_tables(drop_all=True)
+    add_hosts(engine)
+    add_users(engine)
+    add_reservation(engine)

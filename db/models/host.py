@@ -1,7 +1,10 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
-from .reservation import ReservationDB, Reservation_User
+from git import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .reservation import ReservationDB, Reservation_User
 
 
 class HostBase(SQLModel):
@@ -51,4 +54,4 @@ class Host_Reservations(Host):
     Host with a list of Reservation
     """
 
-    reservations: List[Reservation_User] = []
+    reservations: List["Reservation_User"] = []

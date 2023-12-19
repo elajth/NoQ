@@ -2,6 +2,12 @@ from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from .common import DBCommon
 from .host import HostDB
+from .reservation import ReservationDB
+
+class RoomType(DBCommon, table=True):
+    __table__ = "room_type"
+    type_name: str
+
 
 class RoomBase(SQLModel):
     """
@@ -13,7 +19,6 @@ class RoomBase(SQLModel):
 
 class RoomDB(RoomBase, DBCommon, table=True):
     __tablename__ = "rooms"
-    id: Optional[int] = Field(default=None, primary_key=True)
     # beds = List["BedDB"] = Relationship(back_populates="beds")
 
 class RoomAdd(RoomBase):

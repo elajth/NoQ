@@ -36,11 +36,11 @@ async def do_generate():
 
         hosts = add_hosts(engine)
 
-        reservations = add_reservation(engine)
-
         users = add_users(engine)
+
+        reservations = add_reservation(engine)
 
         return {"hosts": hosts, "users": users, "reservations": reservations}
 
-    except Exception:
-        return "Testdata finns redan."
+    except Exception as ex:
+        return ex

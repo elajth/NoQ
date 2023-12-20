@@ -11,12 +11,7 @@ class DBCommon(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
 
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-
-    updated_at: Optional[datetime] = Field(
-        sa_column=Column(
-            DateTime(timezone=True), onupdate=func.now(), default=None, nullable=True
-        )  # sa betyder SQLAlchemy
-    )
+    updated_at: datetime = Field(default=None, nullable=True)
 
 
 def get_database_url():

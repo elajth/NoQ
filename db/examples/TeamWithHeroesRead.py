@@ -22,12 +22,6 @@ class DBCommon(SQLModel):
 
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
-    updated_at: Optional[datetime] = Field(
-        sa_column=Column(
-            DateTime(timezone=True), onupdate=func.now(), default=None, nullable=True
-        )  # sa betyder SQLAlchemy
-    )
-
 
 class TeamBase(SQLModel):
     """
@@ -189,7 +183,9 @@ def on_startup():
 
 @app.post("/heroes/", response_model=HeroRead)
 def add_hero(*, session: Session = Depends(yield_session), hero: HeroCreate):
-    db_hero = Hero.model_validate(hero)   # TODO: Byt till Hero.model_validate(team) vid ny version av SQLModel
+    db_hero = Hero.model_validate(
+        hero
+    )  # TODO: Byt till Hero.model_validate(team) vid ny version av SQLModel
     session.add(db_hero)
     session.commit()
     session.refresh(db_hero)
@@ -223,7 +219,7 @@ def update_hero(
     if not db_hero:
         raise HTTPException(status_code=404, detail="Hero not found")
 
-    hero_data = hero.model_dump(exclude_unset=True)  # TODO: Byt till hero.model_dump(exclude_unset=True) vid ny version av SQLModel
+    hero_data = hero.model_dump(exclude_unset=True)
 
     for key, value in hero_data.items():
         setattr(db_hero, key, value)
@@ -245,7 +241,9 @@ def delete_hero(*, session: Session = Depends(yield_session), hero_id: int):
 
 @app.post("/teams/", response_model=Team)
 def add_team(*, session: Session = Depends(yield_session), team: TeamAdd):
-    db_team = TeamDB.model_validate(team)  # TODO: Byt till TeamDB.model_validate(team) vid ny version av SQLModel
+    db_team = TeamDB.model_validate(
+        team
+    )  
     session.add(db_team)
     session.commit()
     session.refresh(db_team)
@@ -281,7 +279,9 @@ def update_team(
     db_team = session.get(TeamDB, team_id)
     if not db_team:
         raise HTTPException(status_code=404, detail="Team not found")
-    team_data = team.model_dump(exclude_unset=True)   # TODO: Byt till team.model_dump(exclude_unset=True) vid ny version av SQLModel
+    team_data = team.model_dump(
+        exclude_unset=True
+    )  # TODO: Byt till team.model_dump(exclude_unset=True) vid ny version av SQLModel
     for key, value in team_data.items():
         setattr(db_team, key, value)
     session.add(db_team)

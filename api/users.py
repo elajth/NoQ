@@ -26,7 +26,7 @@ async def add_user(*, session: Session = Depends(yield_session), user: UserAdd):
 
 
 @router.get("/users/{id}")
-async def get_user(*, session: Session = Depends(yield_session)):
+async def get_user(*, session: Session = Depends(yield_session), id: int):
     user = session.get(UserDB, id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -34,11 +34,14 @@ async def get_user(*, session: Session = Depends(yield_session)):
 
 
 @router.patch("/users/{id}", response_model=User)
-def update_user(*, session: Session = Depends(yield_session), user: UserUpdate):
+def update_user(
+    *, session: Session = Depends(yield_session), id: int, user: UserUpdate
+):
     db_user = session.get(UserDB, id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     user_data = user.model_dump(exclude_unset=True)
+
     for key, value in user_data.items():
         setattr(db_user, key, value)
     session.add(db_user)

@@ -36,7 +36,7 @@ async def get_host(*, id: int, session: Session = Depends(yield_session)):
 
 
 @router.patch("/hosts/{id}", response_model=Host)
-def update_host(*, session: Session = Depends(yield_session), host: HostUpdate):
+def update_host(*, session: Session = Depends(yield_session), id: int, host: HostUpdate):
     db_host = session.get(HostDB, id)
     if not db_host:
         raise HTTPException(status_code=404, detail="Host not found")

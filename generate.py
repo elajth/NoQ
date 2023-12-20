@@ -20,7 +20,6 @@ def create_db_tables(drop_all: bool = False):
         SQLModel.metadata.drop_all(engine)
         ic("Drop all DB tables")
     # Create the table
-    ic("Create DB tables")
     SQLModel.metadata.create_all(engine)
     return engine
 

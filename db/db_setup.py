@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Read environment variables
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 DB_ECHO = os.environ.get("DB_ECHO", "")
-ic(DATABASE_URL)
+
 
 if DATABASE_URL == "":
     # Read settings from .env file

@@ -19,7 +19,7 @@ def get_database_url():
     load_dotenv()
 
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
-    debug_connection(DATABASE_URL)
+    # debug_connection(DATABASE_URL)
     return DATABASE_URL
 
 
@@ -31,7 +31,7 @@ def debug_connection(db_url: str):
         cloud_db = f'{db_type}://{url[2].split("@")[1]}'
         url = url[3].split("/")
         database = url[1].split("?")[0]
-        ic(cloud_db, user, database)
+        # ic(cloud_db, user, database)
         print("")  # formatting output
 
     except IndexError:

@@ -16,9 +16,23 @@ router = APIRouter()
 
 
 @router.get("/")
-def health_status():
+def health_root():
     path = os.getcwd()
     filename = path + "/templates/index.html"
+    data = ""
+    if os.path.isfile(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = file.read()
+    engine = create_db_tables(False)
+    status = "API status = OK <br/><br/>Data:" + count_records_in_database(engine)
+    html = data.replace("{health_status}", status)
+    return HTMLResponse(content=html)
+
+
+@router.get("/status")
+def health_status():
+    path = os.getcwd()
+    filename = path + "/templates/status.html"
     data = ""
     if os.path.isfile(filename):
         with open(filename, "r", encoding="utf-8") as file:

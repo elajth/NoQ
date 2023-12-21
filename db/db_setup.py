@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 # Read environment variables
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
-DB_ECHO = os.environ.get("DB_ECHO", "")
+DB_ECHO = bool(os.environ.get("DB_ECHO", "").lower() == "true")
 
 if DB_ECHO == "":
     DB_ECHO = False
@@ -22,10 +22,9 @@ if "sqlite" in DATABASE_URL:
 else:
     connect_args = {}
 
-ic(DATABASE_URL, DB_ECHO)
-engine = create_engine(
-    DATABASE_URL, connect_args=connect_args, future=True, echo=DB_ECHO
-)
+
+ic(DATABASE_URL[:10], DB_ECHO)
+engine = create_engine(DATABASE_URL, connect_args=connect_args, echo=DB_ECHO)
 
 
 def yield_session():

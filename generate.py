@@ -1,4 +1,5 @@
 import random
+from typing import List
 from sqlmodel import SQLModel, Session, create_engine, select
 from sqlalchemy import func, table, column
 from datetime import datetime, timedelta
@@ -7,9 +8,10 @@ from faker import Faker
 
 from api.reservations import valid_reservation
 
-from db.models.host import HostDB
 from db.models.reservation import ReservationDB
+from db.models.host import HostDB
 from db.models.user import UserDB
+from db.models.room import RoomDB
 from db.models.common import get_database_url
 
 
@@ -100,7 +102,7 @@ def add_reservation(engine) -> int:
             start_date=datetime.now() + timedelta(days=random.randint(1, 3)),
             end_date=datetime.now(),
             host_id=random.randint(0, 3),
-            user_id=random.randint(0, 20),
+            user_id=random.randint(0, 19),
         )
         with Session(engine) as session:
             if valid_reservation(reservation):
@@ -142,8 +144,56 @@ def add_users(engine) -> int:
     return i + 1
 
 
+def drop_everything(engine):
+    """(On a live db) drops all foreign key constraints before dropping all tables.
+    Workaround for SQLAlchemy not doing DROP ## CASCADE for drop_all()
+    (https://github.com/pallets/flask-sqlalchemy/issues/722)
+    """
+    from sqlalchemy.engine.reflection import Inspector
+    from sqlalchemy.schema import (
+        DropConstraint,
+        DropTable,
+        MetaData,
+        Table,
+        ForeignKeyConstraint,
+    )
+
+    con = engine.connect()
+    trans = con.begin()
+    inspector = Inspector.from_engine(engine)
+
+    # We need to re-create a minimal metadata with only the required things to
+    # successfully emit drop constraints and tables commands for postgres (based
+    # on the actual schema of the running instance)
+    meta = MetaData()
+    tables = []
+    all_fkeys = []
+
+    for table_name in inspector.get_table_names():
+        fkeys = []
+
+        for fkey in inspector.get_foreign_keys(table_name):
+            if not fkey["name"]:
+                continue
+
+            fkeys.append(ForeignKeyConstraint((), (), name=fkey["name"]))
+
+        tables.append(Table(table_name, meta, *fkeys))
+        all_fkeys.extend(fkeys)
+
+    for fkey in all_fkeys:
+        con.execute(DropConstraint(fkey))
+
+    for _table in tables:
+        con.execute(DropTable(_table))
+
+    trans.commit()
+
+
 if __name__ == "__main__":
-    engine = create_db_tables(drop_all=True)
+    engine = create_engine(get_database_url(), echo=False)
+    drop_everything(engine)
+    engine = create_db_tables()
     add_hosts(engine)
     add_users(engine)
     add_reservation(engine)

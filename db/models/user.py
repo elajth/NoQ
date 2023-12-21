@@ -29,6 +29,7 @@ class User(UserBase):
     """
     Represents a user and a homeless
     """
+
     id: int
 
 

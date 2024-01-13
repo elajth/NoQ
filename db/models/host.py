@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 class HostBase(SQLModel):
     name: str
-    address1: str
-    address2: str
+    street: str
+    city: str
     count_of_available_places: int
     total_available_places: int
 

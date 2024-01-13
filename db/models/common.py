@@ -7,11 +7,18 @@ from icecream import ic
 from dotenv import load_dotenv
 
 
+class DBTable(SQLModel):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    # created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    # updated_at: datetime = Field(default=None, nullable=True)
+
+
 class DBCommon(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True)
 
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    updated_at: datetime = Field(default=None, nullable=True)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
 def get_database_url():
@@ -19,8 +26,16 @@ def get_database_url():
     load_dotenv()
 
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///noq.sqlite")
+    DB_ECHO = bool(os.environ.get("DB_ECHO", "").lower() == "true")
     # debug_connection(DATABASE_URL)
-    return DATABASE_URL
+
+    if DB_ECHO == "":
+        DB_ECHO = False
+
+    if DATABASE_URL == "":
+        Exception("Database settings, DATABASE_URL and DB_ECHO, in .env has no value")
+
+    return DATABASE_URL, DB_ECHO
 
 
 def debug_connection(db_url: str):
@@ -44,3 +59,5 @@ def print_code(filename: str, from_line: int, to_line: int):
             data = file.read().split("\n")
             for i in range(from_line - 1, to_line):
                 print(data[i])
+
+

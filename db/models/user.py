@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Relationship
-from .common import DBCommon
+from .common import DBTable
 from git import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ class UserBase(SQLModel):
     unokod: str
 
 
-class UserDB(UserBase, DBCommon, table=True):
+class UserDB(UserBase, DBTable, table=True):
     __tablename__ = "users"
 
     reserved: Optional["ReservationDB"] = Relationship(back_populates="user")

@@ -1,6 +1,6 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
-from .common import DBCommon
+from .common import DBTable
 from git import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ class HostBase(SQLModel):
     total_available_places: int
 
 
-class HostDB(HostBase, DBCommon, table=True):
+class HostDB(HostBase, DBTable, table=True):
     __tablename__ = "hosts"
 
     id: Optional[int] = Field(default=None, primary_key=True)

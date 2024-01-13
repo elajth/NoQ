@@ -1,6 +1,6 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
-from .common import DBCommon
+from .common import DBTable
 from git import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ class RoomBase(SQLModel):
     host_id: int = Field(index=True, nullable=False, foreign_key="hosts.id")
 
 
-class RoomDB(RoomBase, DBCommon, table=True):
+class RoomDB(RoomBase, DBTable, table=True):
     __tablename__ = "rooms"
 
     host: Optional["HostDB"] = Relationship(back_populates="rooms")

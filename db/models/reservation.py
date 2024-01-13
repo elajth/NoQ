@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import date
 from sqlmodel import SQLModel, Field, Relationship
-from .common import DBCommon
+from .common import DBTable, DBCommon
 from git import TYPE_CHECKING
 
 from .user import User

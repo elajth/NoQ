@@ -43,6 +43,17 @@ def health_status():
     return HTMLResponse(content=html)
 
 
+@router.get("/login")
+def login():
+    path = os.getcwd()
+    filename = path + "/templates/login.html"
+    data = ""
+    if os.path.isfile(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = file.read()
+    return HTMLResponse(content=data)
+    
+
 @router.get("/generate")
 async def do_generate():
     try:

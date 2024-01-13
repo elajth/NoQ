@@ -290,3 +290,7 @@ $RECYCLE.BIN/
 *.db
 *.sqlite
 .vscode/settings.json
+db/examples/connect_db.py
+db/examples/automatic_id.py
+db/examples/example_common.py
+env310

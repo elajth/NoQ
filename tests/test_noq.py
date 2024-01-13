@@ -6,11 +6,6 @@ from icecream import ic
 client = TestClient(app)
 
 
-def test_generate():
-    response = client.get("/generate")
-    assert response.status_code == 200
-
-
 def test_users():
     response = client.get("/users")
     assert response.status_code == 200

@@ -38,7 +38,7 @@ def create_tables_add_content():
 
     ic("create in memory database tables")
 
-    SQLModel.metadata.drop_all(engine)
+    # SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
     add_hosts(engine)
     add_users(engine)
